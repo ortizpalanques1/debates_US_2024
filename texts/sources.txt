@@ -1,0 +1,5 @@
+File,WWW
+harris_trump_20240910,https://www.msn.com/en-us/news/politics/read-the-full-transcript-of-abc-news-presidential-debate-between-harris-and-trump/ar-AA1qmoTQ#image=1
+biden_trump_20200929,https://eu.usatoday.com/story/news/politics/elections/2020/09/30/presidential-debate-read-full-transcript-first-debate/3587462001/
+biden_trump_20240627,https://edition.cnn.com/2024/06/27/politics/read-biden-trump-debate-rush-transcript/index.html
+vance_walz_20241001,https://www.msn.com/en-us/news/politics/read-the-full-transcript-of-tuesday-s-vp-debate-between-tim-walz-jd-vance/ar-AA1rBb1w
