@@ -1,5 +1,3 @@
-## README
-
 # 2024 Presidential Debates. Text Analysis
 
 ## Goals
