@@ -21,10 +21,11 @@ Obtaining metrics of the main trends for each candidate and, when possible, comp
 ## Tasks
 Task      |Description         |Completed
 ----------|--------------------|---------
-Find the transcripts|Dowload the different text from the internet|yes
+Find the transcripts|Download the different text from the internet.|Yes
+Create a common data frame with three rows|Order of participation, Speaker, Text. Since the texts has different formats, this first task could be done using R or a Word processor. In this case we will use R. This effort can be time consuming, but the experience would be invaluable.|Working on it
 
 1. .
-2. Create a common data frame with three rows: Order of participation, Speaker, Text. Since the texts has different formats, this first task could be done using R or a Word processor. In this case we will use R. This effort can be time consuming, but the experience would be invaluable.
+2. : 
 3. Count the words.
 4. Find the stop words file.
 5. Obtain the most used words.
