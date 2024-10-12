@@ -18,7 +18,19 @@ Obtaining metrics of the main trends for each candidate and, when possible, comp
 1. Comparison with previous elections (e.g. with Biden and Trump in 2020).
 2. Do the same in other languages (e.g. Python).
 
+## Tasks
+Task      |Description         |Completed
+----------|--------------------|---------
+Find the transcripts|Dowload the different text from the internet|yes
+
+1. .
+2. Create a common data frame with three rows: Order of participation, Speaker, Text. Since the texts has different formats, this first task could be done using R or a Word processor. In this case we will use R. This effort can be time consuming, but the experience would be invaluable.
+3. Count the words.
+4. Find the stop words file.
+5. Obtain the most used words.
+
 ## References
 https://www.youtube.com/watch?v=bUoN85QvC10&t=580s
 
+## License
 <p xmlns:cc="http://creativecommons.org/ns#" xmlns:dct="http://purl.org/dc/terms/"><a property="dct:title" rel="cc:attributionURL" href="https://github.com/ortizpalanques1/debates_US_2024">Text Analysis of US 2024 Presidential Debates Using R</a> by <a rel="cc:attributionURL dct:creator" property="cc:attributionName" href="https://www.linkedin.com/in/marco-ortiz-palanques-710a556b/">Marco Ortiz Palanques</a> is licensed under <a href="https://creativecommons.org/licenses/by-nc/4.0/?ref=chooser-v1" target="_blank" rel="license noopener noreferrer" style="display:inline-block;">CC BY-NC 4.0<img style="height:22px!important;margin-left:3px;vertical-align:text-bottom;" src="https://mirrors.creativecommons.org/presskit/icons/cc.svg?ref=chooser-v1" alt=""><img style="height:22px!important;margin-left:3px;vertical-align:text-bottom;" src="https://mirrors.creativecommons.org/presskit/icons/by.svg?ref=chooser-v1" alt=""><img style="height:22px!important;margin-left:3px;vertical-align:text-bottom;" src="https://mirrors.creativecommons.org/presskit/icons/nc.svg?ref=chooser-v1" alt=""></a></p>
