@@ -3,6 +3,20 @@
 library(tidytext)
 library(tidyverse)
 
+
+# Functions ####
+name_filler <- function(x){
+  this_vector <- x
+  for(i in 1:length(this_vector)){
+    if(!is.na(this_vector[i])){
+      this_vector[i] <- this_vector[i]
+    }else{
+      this_vector[i] <- this_vector[i-1]
+    }
+  }
+  return(this_vector)
+}
+
 # 1. Biden Trump 27 June 2024 ####
 # Load data and creation of two new columns: line_number and person 
 biden_trump_20240627 <- read.delim("texts/biden_trump_20240627.txt", header = FALSE) %>% 
@@ -44,6 +58,9 @@ for(i in 1:nrow(biden_trump_20240627)){
     biden_trump_20240627$person[i] <- biden_trump_20240627$person[i-1]
   }
 }
+
+# Alternatively, you can use the function name_filler
+# biden_trump_20240627$person <- name_filler(biden_trump_20240627$person)
   
 # 2. Harris Trump 10 September 2024 ####
 
@@ -82,6 +99,8 @@ for(i in 1:nrow(harris_trump_20240910)){
   }
 }
 
+# Alternatively, you can use the function name_filler
+# harris_trump_20240910$person <- name_filler(harris_trump_20240910$person)
 
 # 3. Vance Walz 1 October 2024 ####
 # Load data and creation of two new columns: line_number and person 
