@@ -1,10 +1,9 @@
 # Loading the Text and Creating the Data Frame
-# Libraries ####
+# 1. Libraries ####
 library(tidytext)
 library(tidyverse)
 
-
-# Functions ####
+# 2. Functions ####
 name_filler <- function(x){
   this_vector <- x
   for(i in 1:length(this_vector)){
@@ -17,12 +16,13 @@ name_filler <- function(x){
   return(this_vector)
 }
 
-# 1. Biden Trump 27 June 2024 ####
+# 3. Biden Trump 27 June 2024 ####
 # Load data and creation of two new columns: line_number and person 
 biden_trump_20240627 <- read.delim("texts/biden_trump_20240627.txt", header = FALSE) %>% 
   mutate(line_number = row_number(),
          person = str_extract(V1, "^[[:upper:]][[:upper:]]+.*?(?=:)"),
-         V1 = str_replace(V1, "^[[:upper:]][[:upper:]]+.*?: ", "")) %>%
+         V1 = str_replace(V1, "^[[:upper:]][[:upper:]]+.*?: ", ""),
+         the_date = as.Date("2024-06-27")) %>%
   rename(transcript = V1) %>% 
   relocate(line_number, person, transcript) %>% 
   tibble()
@@ -62,13 +62,14 @@ for(i in 1:nrow(biden_trump_20240627)){
 # Alternatively, you can use the function name_filler
 # biden_trump_20240627$person <- name_filler(biden_trump_20240627$person)
   
-# 2. Harris Trump 10 September 2024 ####
+# 4. Harris Trump 10 September 2024 ####
 
 # Load data and creation of two new columns: line_number and person 
 harris_trump_20240910 <- read.delim("texts/harris_trump_20240910.txt", header = FALSE) %>% 
   mutate(line_number = row_number(),
          person = str_extract(V1, "^[[:upper:]]+.*?(?=:)"),
-         V1 = str_replace(V1, "^[[:upper:]]+.*?: ", "")) %>% 
+         V1 = str_replace(V1, "^[[:upper:]]+.*?: ", ""),
+         the_date = as.Date("2024-09-10")) %>% 
   rename(transcript = V1) %>% 
   relocate(line_number, person, transcript) %>% 
   tibble()
@@ -102,13 +103,44 @@ for(i in 1:nrow(harris_trump_20240910)){
 # Alternatively, you can use the function name_filler
 # harris_trump_20240910$person <- name_filler(harris_trump_20240910$person)
 
-# 3. Vance Walz 1 October 2024 ####
+# 5. Vance Walz 1 October 2024 ####
 # Load data and creation of two new columns: line_number and person 
 # Although it is the shortest scrip, some manual cleaning was needed. We removed some prerecorded statements and voice-off segments and adjusted some wrongly attributed paragraphs.
 vance_walz_20241001 <- read.delim("texts/vance_walz_20241001.txt", header = FALSE) %>% 
   mutate(line_number = row_number(),
          person = str_extract(V1, "^[[:upper:]]+.*?(?=:)"),
-         V1 = str_replace(V1, "^[[:upper:]]+.*?: ", "")) %>% 
+         V1 = str_replace(V1, "^[[:upper:]]+.*?: ", ""),
+         the_date = as.Date("2024-10-01")) %>% 
   rename(transcript = V1) %>% 
   relocate(line_number, person, transcript) %>% 
   tibble()
+
+# Getting raw names
+participants_20241001 <- unique(vance_walz_20241001$person)
+
+#Only names
+names_20241001 <- participants_20241001[1:4]
+names_20241001 <- gsub("NORAH O' ", "NORAH O'", names_20241001)
+
+#Replace with standard names_20240910
+vance_walz_20241001$person <- recode(vance_walz_20241001$person,
+                                       `NORAH O' DONNELL` = names_20241001[1],
+                                       `NORAH O’DONNELL` = names_20241001[1]
+)
+
+# 6. Unique data frame with all data ====
+
+# Candidacies and political alignment
+all_the_names <- unique(c(names_20240627, names_20240910, names_20241001))
+position <- c("Journalist", "President", "Vice-President")
+party <- c("Democrat", "Republican", "Neutral")
+
+all_participants <- data.frame(
+  person = all_the_names,
+  candidacy = c(position[1], position[1], position[2], position[2], position[1], position[1], position[2], position[1], position[1], position[3], position[3]),
+  alignment = c(party[3], party[3], party[1], party[2], party[3], party[3], party[1], party[3], party[3], party[1], party[2])
+)
+
+# Bind data frames and join with all_participants
+debates_2024 <- bind_rows(biden_trump_20240627, harris_trump_20240910, vance_walz_20241001) %>% 
+  left_join(all_participants)
