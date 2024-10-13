@@ -16,7 +16,7 @@ Establish and compare the main trends in the candidates' arguments.
 Obtaining metrics of the main trends for each candidate and, when possible, compare them to those of the other candidates.
 ### Out of Scope
 1. Comparison with previous elections (e.g. with Biden and Trump in 2020).
-2. Do the same in other languages (e.g. Python).
+2. Doing the same in other languages (e.g. Python).
 
 ## Tasks
 Task      |Description         |Completed
