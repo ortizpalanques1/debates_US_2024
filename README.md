@@ -22,10 +22,10 @@ Obtaining metrics of the main trends for each candidate and, when possible, comp
 Task      |Description         |Completed
 ----------|--------------------|---------
 Find the transcripts|Download the different text from the internet.|Yes
-Create a common data frame|We will create a data frame with three columns: Order of participation, Speaker, Text. Since the texts has different formats, this first task could be done using R or a Word processor. In this case we will use R. This effort can be time consuming, but the experience would be invaluable.|Working on it
-Count the words||
-Find the stop words file||
-Obtain the most used words||
+Create a common data frame|We will create a data frame with three columns: Order of participation, Speaker, Text. Since the texts has different formats, this first task could be done using R or a Word processor. In this case we will use R. This effort can be time consuming, but the experience would be invaluable.|Yes
+Count the words|We want to know how many words each candidate. The product is a data frame and a graphic|Working on it
+Find the stop words file|Using the corresponding joins, we will control the number of relevant words|No
+Obtain the most used words|Similar to the "Count the words" task. In this case we will work only with the relevant words|No
 
 
 ## References
