@@ -29,7 +29,7 @@ Obtain the most used words|Similar to the "Count the words" task. In this case w
 
 ## Results
 ### Count the words
-#### Number of Word by Candidate/Debate
+#### Number of Words by Candidate/Debate
 <img src="graph/word_count.png" alt="drawing" width="500"/>
 
 
