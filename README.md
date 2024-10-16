@@ -27,6 +27,11 @@ Count the words|We want to know how many words each candidate. The product is a 
 Find the stop words file|Using the corresponding joins, we will control the number of relevant words|No
 Obtain the most used words|Similar to the "Count the words" task. In this case we will work only with the relevant words|No
 
+## Results
+### Count the words
+#### Number of Word by Candidate/Debate
+<img src="graph/word_count.png" alt="drawing" width="500"/>
+
 
 ## References
 1. Schloss, P. [Connecting an Existing RStudio Project to Git and GitHub (CC145)](https://www.youtube.com/watch?v=bUoN85QvC10).
