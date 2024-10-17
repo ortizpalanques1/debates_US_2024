@@ -21,6 +21,7 @@ debates_2024_by_word <- debates_2024 %>%
   arrange(desc(Words), .by_group = TRUE) %>% 
   ggplot(aes(x = reorder(person, Words), y = Words, fill = person, label = Words))+
   geom_col()+
+  scale_y_continuous(expand = c(0,0), limits = c(0,9000))+
   facet_wrap(~the_date, nrow = 3, scales = "free")+
   scale_fill_manual(values = person_colors)+
   coord_flip()+
@@ -35,9 +36,9 @@ debates_2024_by_word <- debates_2024 %>%
     legend.position = "off",
     strip.background = element_rect(fill = "#3D0C02"),
     strip.text = element_text(colour = "white", face = "bold"),
-    panel.background = element_rect(fill = "#4D4D4D"),
-    panel.grid = element_line(color = "#4D4D4D"),
-    plot.background = element_rect(fill = "#0C090A"),
+    panel.background = element_rect(fill = "#C5B6B3"),
+    panel.grid = element_line(color = "#C5B6B3"),
+    plot.background = element_rect(fill = "#2c3840"),
     plot.title = element_text(hjust = 0.5),
     plot.title.position = "plot",
     title = element_text(color = "white")
