@@ -35,11 +35,15 @@ Obtain the most used words|Similar to the "Count the words" task. In this case w
 <img src="graph/word_count.png" alt="drawing" width="500"/>
 
 ### Most Used Words with Stop Words
+
 ####Goals
+
 1. Number of unique words by candidate and debate.
 2. Vocabulary diversity by candidate: number of unique words relative to the total number of words (DW/TW).
 3. Number of relevant words (after applying the stop-words).
+
 ####Tasks
+
 1. Unique words.
 1.1. Create a data frame with the total number of words (including numbers) used by candidates in the debate. 1.2. This task includes filtering the data (no journalists), grouping by debate and candidate, and counting the number of rows.
 1.3. Build a bar graph with the results. Start with a new ggplot graph. First, we must create a column with the candidates' names and the month of the debate (because Trump participated twice) and use this column as the X-axis.
