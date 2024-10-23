@@ -36,13 +36,13 @@ Obtain the most used words|Similar to the "Count the words" task. In this case w
 
 ### Most Used Words with Stop Words
 
-####Goals
+#### Goals
 
 1. Number of unique words by candidate and debate.
 2. Vocabulary diversity by candidate: number of unique words relative to the total number of words (DW/TW).
 3. Number of relevant words (after applying the stop-words).
 
-####Tasks
+#### Tasks
 
 1. Unique words.
 1.1. Create a data frame with the total number of words (including numbers) used by candidates in the debate. 1.2. This task includes filtering the data (no journalists), grouping by debate and candidate, and counting the number of rows.
