@@ -2,6 +2,7 @@
 # Libraries ####
 library(tidyverse)
 library(tidytext)
+source("scripts/clean_texts.R")
 
 # Create the tibble by word ####
 # Vector with names
