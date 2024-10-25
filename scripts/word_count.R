@@ -2,7 +2,6 @@
 # Libraries ####
 library(tidyverse)
 library(tidytext)
-source("scripts/clean_texts.R")
 
 # Create the tibble by word ####
 # Vector with names
@@ -34,6 +33,7 @@ debates_2024_by_word <- debates_2024 %>%
   theme(
     axis.title.y = element_blank(),
     axis.text = element_text(color = "white", face = "bold"),
+    axis.ticks = element_blank(),
     legend.position = "off",
     strip.background = element_rect(fill = "#3D0C02"),
     strip.text = element_text(colour = "white", face = "bold"),

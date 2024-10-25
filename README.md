@@ -57,6 +57,9 @@ Obtain the most used words|Similar to the "Count the words" task. In this case w
 2.4. Joint both data frames: "debates_2024_candidate_month_total_words" and "debates_2024_candidate_month_unique_words."
 2.5. Apply the formula in a new column.
 2.6. Build the corresponding graph.
+
+<img src="graph/vocabulary_diversity.png" alt="drawing" width="500"/>
+
 3. Number of relevant words.
 3.1. Improve the stop words: no numbers, no personal pronouns.
 3.2. Apply the anti-join command to the data frame "debates_2024."
