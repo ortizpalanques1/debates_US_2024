@@ -61,7 +61,7 @@ Obtain the most used words|Similar to the "Count the words" task. In this case w
 <img src="graph/vocabulary_diversity.png" alt="drawing" width="500"/>
 
 3. Number of relevant words.
-3.1. Improve the stop words: no numbers, no personal pronouns.
+3.1. Improve the stop words: no numbers, no personal pronouns, keep the verbs.
 3.2. Apply the anti-join command to the data frame "debates_2024."
 3.3. Repeat tasks in the section "Unique words."
 
