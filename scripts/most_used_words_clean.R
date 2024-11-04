@@ -33,6 +33,7 @@ debates_2024_uw_clean <- debates_2024 %>%
   mutate(transcript = gsub("Harris", "kamala_harris", transcript)) %>% 
   mutate(transcript = gsub("Joe Biden", "joe_biden", transcript)) %>% 
   mutate(transcript = gsub("Biden", "joe_biden", transcript)) %>% 
+  mutate(transcript = gsub("Governor Walz", "tim_walz", transcript)) %>% 
   mutate(transcript = gsub("Tim_Walz", "tim_walz", transcript)) %>%
   mutate(transcript = gsub("Walz", "tim_walz", transcript)) %>% 
   mutate(transcript = gsub("Tim", "tim_walz", transcript)) %>% 
@@ -62,6 +63,7 @@ debates_2024_uw_clean_ss <- debates_2024 %>%
   mutate(transcript = gsub("Harris", "kamala_harris", transcript)) %>% 
   mutate(transcript = gsub("Joe Biden", "joe_biden", transcript)) %>% 
   mutate(transcript = gsub("Biden", "joe_biden", transcript)) %>% 
+  mutate(transcript = gsub("Governor Walz", "tim_walz", transcript)) %>% 
   mutate(transcript = gsub("Tim_Walz", "tim_walz", transcript)) %>%
   mutate(transcript = gsub("Walz", "tim_walz", transcript)) %>% 
   mutate(transcript = gsub("Tim", "tim_walz", transcript)) %>% 
@@ -72,6 +74,8 @@ debates_2024_uw_clean_ss <- debates_2024 %>%
   filter(!grepl("^\\(", transcript)) %>% 
   filter(!person %in% all_participants$person[all_participants$candidacy == "Journalist"]) %>% 
   unnest_tokens(word, transcript) %>%
+  mutate(word = str_replace(word, "women", "woman")) %>%
+  mutate(word = str_replace(word, "men", "man")) %>%
   mutate(word = str_replace(word, "’", "'")) %>% 
   mutate(word = ifelse(grepl("'s$", word) | grepl("’s$", word),
                        str_sub(word, 1, (nchar(word)-2)),
@@ -82,13 +86,33 @@ debates_2024_uw_clean_ss <- debates_2024 %>%
   anti_join(stop_words) %>% 
   arrange(desc(n), .by_group = TRUE) 
 
-# Unique words
-
-# 
+# Graph with the most used words
 debates_2024_uw_clean_ss_graph <- debates_2024_uw_clean_ss %>% 
   slice(1:20)
-  
 
- 
+# This three date will cut the different sections and will be helpful for the loop
+date_debate <- unique(debates_2024_uw_clean_ss_graph$the_date)
 
-
+for(i in 1:length(date_debate)){
+  this_name <- paste0("debate_", date_debate[i])
+  this_data <- debates_2024_uw_clean_ss_graph[debates_2024_uw_clean_ss_graph$the_date == date_debate[i],] %>% 
+    ungroup() %>%
+    mutate(word_2 = ifelse(person == person[1], paste0(word, "_d"), paste0(word, "_b"))) %>% 
+    ggplot(aes(y = reorder(word_2, n), x = n, fill = person, label = paste(word, "/", n)))+
+    facet_wrap(~person,  scales = "free_y")+
+    geom_col()+
+    geom_text(aes(x = 1), fontface="bold", color="white", hjust = 0)+
+    scale_fill_manual(values = person_colors)+
+    theme(
+      axis.text = element_blank(),
+      axis.ticks.y = element_blank(),
+      axis.title = element_blank(),
+      legend.position = "off",
+      panel.background = element_rect(fill = "#2c3840"),
+      panel.grid = element_line(color = "#2c3840"),
+      plot.background = element_rect(fill = "#2c3840"),
+      strip.background = element_rect(fill = "black"),
+      strip.text = element_text(colour = "#e5b80b", face = "bold"),
+    )
+  ggsave(paste0("graph/",this_name,".png"),this_data, units = "cm", width = 16, height = 16, device = "png")
+}

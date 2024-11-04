@@ -103,13 +103,3 @@ debates_2024_vocabulary_diversity_graph <- ggplot(
   )
 
 ggsave("graph/vocabulary_diversity.png", debates_2024_vocabulary_diversity_graph, units = "cm", width = 16, height = 16, device = "png")
-
-  
-  
-  
-
-
-
-
-# filter(!grepl("[[:digit:]]+", word)) %>% 
-#   arrange(desc(n), .by_group = TRUE) 
