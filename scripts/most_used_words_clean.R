@@ -116,3 +116,12 @@ for(i in 1:length(date_debate)){
     )
   ggsave(paste0("graph/",this_name,".png"),this_data, units = "cm", width = 16, height = 16, device = "png")
 }
+
+# Data base for the app ####
+candidates_data <- debates_2024 %>% 
+  select(-c(transcript, line_number)) %>% 
+  unique() %>% 
+  filter(candidacy != "Journalist") %>% 
+  mutate(selection = paste0(person, " ", the_date))
+
+save(person_colors, candidates_data, debates_2024_uw_clean_ss, file = "data_debate_2024.RData")

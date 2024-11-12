@@ -74,7 +74,19 @@ Obtain the most used words|Similar to the "Count the words" task. In this case w
 ### Similarities in the discourses
 Using the file *debates_2024_uw_clean* we can obtain correlations and plot with which we can see how similar are the candidates discourses. For instance, we can compare the two oldest candidates, president and vice president of the same party, etc. Since we have six participations, we have 15 possible combinations.
 
-$\binom{6}{2} = frac{6!}{2!(6-2)!} = 15$
+$\binom{6}{2} =$ $\frac{6!}{2!(6-2)!} =$ $\ 15$
+
+However, the relevance of each combination is relative according to our interest. This has consequences, we can decide to build 15 graphs or create an app and let each person decide which combination they want to check. Therefore we will create an app inside our main project.
+
+#### Goal
+Build a Shiny App that allow the researcher to evaluate similarities between to different participations in the debate.
+
+#### Tasks
+1. Create a directory and load the data.
+2. Create the Shiny App with two selectors (the second selector must not have the first selected option).
+3. Design the main page with an area for the graph and some visualization (gauge or other to visualize the Pearson's correlation).
+4. Not all the space must be used. We may want to add some elements in the future.
+
 
 ## References
 1. Schloss, P. [Connecting an Existing RStudio Project to Git and GitHub (CC145)](https://www.youtube.com/watch?v=bUoN85QvC10).
