@@ -74,7 +74,7 @@ Obtain the most used words|Similar to the "Count the words" task. In this case w
 ### Similarities in the discourses
 Using the file *debates_2024_uw_clean* we can obtain correlations and plot with which we can see how similar are the candidates discourses. For instance, we can compare the two oldest candidates, president and vice president of the same party, etc. Since we have six participations, we have 15 possible combinations.
 
-$$/binom{6}{2} = 15$$
+$\binom{6}{2} = 15$
 
 ## References
 1. Schloss, P. [Connecting an Existing RStudio Project to Git and GitHub (CC145)](https://www.youtube.com/watch?v=bUoN85QvC10).
