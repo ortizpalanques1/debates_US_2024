@@ -65,11 +65,11 @@ Obtain the most used words|Similar to the "Count the words" task. In this case w
 3.2. Apply the anti-join command to the data frame "debates_2024."
 3.3. Repeat tasks in the section "Unique words."
 
-<img src="graph/debate_2024_06_27.png" alt="drawing" width="500">
+<img src="graph/debate_2024-06-27.png" alt="drawing" width="500">
 
-<img src="graph/debate_2024_09_10.png" alt="drawing" width="500">
+<img src="graph/debate_2024-09-10.png" alt="drawing" width="500">
 
-<img src="graph/debate_2024_10_01.png" alt="drawing" width="500">
+<img src="graph/debate_2024-10-01.png" alt="drawing" width="500">
 
 ### Similarities in the discourses
 Using the file *debates_2024_uw_clean* we can obtain correlations and plot with which we can see how similar are the candidates discourses. For instance, we can compare the two oldest candidates, president and vice president of the same party, etc. Since we have six participations, we have 15 possible combinations.
