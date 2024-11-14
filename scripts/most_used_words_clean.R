@@ -118,10 +118,19 @@ for(i in 1:length(date_debate)){
 }
 
 # Data base for the app ####
+
+# Candidates data
 candidates_data <- debates_2024 %>% 
   select(-c(transcript, line_number)) %>% 
   unique() %>% 
   filter(candidacy != "Journalist") %>% 
-  mutate(selection = paste0(person, " ", the_date))
+  mutate(selection = paste0(person, " ", the_date)) 
 
-save(person_colors, candidates_data, debates_2024_uw_clean_ss, file = "data_debate_2024.RData")
+
+# Proportion of word by candidate/debate
+debates_2024_uw_clean_ss_proprotions <- debates_2024_uw_clean_ss %>% 
+  mutate(proportion = n/sum(n),
+         selection = paste0(person, " ", the_date)) 
+
+# Save file and sent to debates_2024_app/data  
+save(person_colors, candidates_data, debates_2024_uw_clean_ss_proprotions, file = "data_debate_2024.RData")
