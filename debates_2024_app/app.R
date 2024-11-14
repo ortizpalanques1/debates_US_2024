@@ -11,7 +11,7 @@ load("data/data_debate_2024.RData")
 ui <- fluidPage(
 
     # Application title
-    titlePanel("Old Faithful Geyser Data"),
+    titlePanel("United States Presidential Debates (2024)"),
 
     # Sidebar with a slider input for number of bins 
     sidebarLayout(
@@ -22,19 +22,13 @@ ui <- fluidPage(
           
           selectInput("candidate_2",
                       "Candidate 2",
-                      choices = NULL),
-          
-            sliderInput("bins",
-                        "Number of bins:",
-                        min = 1,
-                        max = 50,
-                        value = 30)
+                      choices = NULL)
         ),
 
         # Show a plot of the generated distribution
         mainPanel(
           plotOutput("candidates"),
-           plotOutput("distPlot")
+          textOutput("correlation")
         )
     )
 )
@@ -52,20 +46,23 @@ server <- function(input, output) {
     updateSelectInput(inputId = "candidate_2", choices = choices)
   })
   
-  # Create the data frame with the two selected names
-  
+  # Data frame with the two selected names
   candidate_both <- reactive({
     candidate_x <- debates_2024_uw_clean_ss_proprotions %>% 
+      ungroup() %>% 
       filter(selection == input$candidate_1) %>% 
       select(word, proportion, selection)
     
     candidate_y <- debates_2024_uw_clean_ss_proprotions %>% 
+      ungroup() %>% 
       filter(selection == input$candidate_2) %>% 
       select(word, proportion, selection)
     
-    data <- full_join(candidate_x, candidate_y, by = "word")
+    data <- full_join(candidate_x, candidate_y, by = "word") 
   })
+ 
   
+  # Plot
   output$candidates <- renderPlot({
     ggplot(candidate_both(), aes(x = proportion.x, y = proportion.y, color = abs(proportion.y - proportion.x)))+
       geom_abline(color = "darkgreen", lty =2)+
@@ -78,21 +75,19 @@ server <- function(input, output) {
       )
   })
   
+  # Correlation
+  output$correlation <- renderText({
+    lado_1 <- candidate_both()$proportion.x %>% 
+      replace(is.na(.), 0)
+    lado_2 <- candidate_both()$proportion.y %>% 
+      replace(is.na(.), 0)
+    # print(length(lado_1))
+    # print(length(lado_2))
+    
+    the_test <- cor.test(lado_1, lado_2, method = "pearson")
+    paste0(round(the_test$estimate, 2), " ", the_test$p.value)
+  })
   
-
-  
-  
-
-    output$distPlot <- renderPlot({
-        # generate bins based on input$bins from ui.R
-        x    <- faithful[, 2]
-        bins <- seq(min(x), max(x), length.out = input$bins + 1)
-
-        # draw the histogram with the specified number of bins
-        hist(x, breaks = bins, col = 'darkgray', border = 'white',
-             xlab = 'Waiting time to next eruption (in mins)',
-             main = 'Histogram of waiting times')
-    })
 }
 
 # Run the application 
