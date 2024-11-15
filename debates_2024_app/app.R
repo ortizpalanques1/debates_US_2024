@@ -2,6 +2,7 @@ library(shiny)
 library(tidyverse)
 library(tidyr)
 load("data/data_debate_2024.RData")
+source("www/functions.R")
 # Files to retrive
 # debates_2024_uw_clean_ss = All the words after stop_words
 # candidates_data
@@ -9,28 +10,52 @@ load("data/data_debate_2024.RData")
 
 # Define UI for application that draws a histogram
 ui <- fluidPage(
-
-    # Application title
-    titlePanel("United States Presidential Debates (2024)"),
-
-    # Sidebar with a slider input for number of bins 
-    sidebarLayout(
-        sidebarPanel(
-          selectInput("candidate_1",
-                      "Candidate 1",
-                      choices = candidates_data$selection),
-          
-          selectInput("candidate_2",
-                      "Candidate 2",
-                      choices = NULL)
-        ),
-
-        # Show a plot of the generated distribution
-        mainPanel(
-          plotOutput("candidates"),
-          textOutput("correlation")
+  tags$head(
+    tags$link(rel = "stylesheet", type = "text/css", href = "style.css")
+  ),
+  class = "column_selection",
+  fluidRow(
+    h1(
+      "United States Presidential Debates (2024)",
+      #style = "background-color: yellow;"
+      class = "title"
+      )
+  ),
+  fluidRow(
+    column(
+      2,
+      class = "column_selection",
+      h2(selector_title),
+      selectInput("candidate_1",
+                  "Candidate 1",
+                  choices = candidates_data$selection),
+      
+      selectInput("candidate_2",
+                  "Candidate 2",
+                  choices = NULL)
+    ),
+    column(
+      10,
+      fluidRow(
+        column(
+          6,
+          plotOutput("candidates")
         )
+      ),
+      fluidRow(
+        column(
+          2,
+          h4(correlatio),
+          textOutput("correlation")
+        ),
+        column(
+          2,
+          h4(the_pvalue),
+          textOutput("pvalue")
+        )
+      )
     )
+  )
 )
 
 # Define server logic required to draw a histogram
@@ -44,6 +69,14 @@ server <- function(input, output) {
   observeEvent(candidate_alter(), {
     choices <- candidate_alter()$selection
     updateSelectInput(inputId = "candidate_2", choices = choices)
+  })
+  
+  # Candidate name
+  candidate_x_name <- reactive({
+    candidate_both()$selection.x[1]
+  })
+  candidate_y_name <- reactive({
+    candidate_both()$selection.y[1]
   })
   
   # Data frame with the two selected names
@@ -66,27 +99,45 @@ server <- function(input, output) {
   output$candidates <- renderPlot({
     ggplot(candidate_both(), aes(x = proportion.x, y = proportion.y, color = abs(proportion.y - proportion.x)))+
       geom_abline(color = "darkgreen", lty =2)+
-      geom_point(alpha = 0.1, size = 2.5, width = 0.3, height = 0.3)+
-      geom_text(aes(label = word), check_overlap = TRUE, vjust = 1.5)+
+      geom_point(alpha = 0.05, size = 2.5, color = "#ff6500")+
+      geom_text(aes(label = word), check_overlap = TRUE, vjust = 1.5, color = "black")+
       scale_x_log10(labels = scales::percent)+
       scale_y_log10(labels = scales::percent)+
+      labs(
+        x = candidate_x_name(),
+        y = candidate_y_name()
+      )+
       theme(
-        legend.position = "none"
+        axis.title = element_text(family =  "TT Times New Roman", face = "bold", color = "black", size = 14),
+        axis.text = element_text(family =  "TT Times New Roman", face = "bold", color = "black", size = 10),
+        legend.position = "none",
+        panel.background = element_rect(fill = "#fdfd96"),
+        panel.grid.major = element_line(color = "grey"),
+        panel.grid.minor = element_line(color = "white"),
+        plot.background = element_rect(fill = "white")
       )
   })
   
-  # Correlation
-  output$correlation <- renderText({
-    lado_1 <- candidate_both()$proportion.x %>% 
+  # Correlation the Test
+  the_correlatio <- reactive({
+    lado_x <- candidate_both()$proportion.x %>%
       replace(is.na(.), 0)
-    lado_2 <- candidate_both()$proportion.y %>% 
+    lado_y <- candidate_both()$proportion.y %>%
       replace(is.na(.), 0)
-    # print(length(lado_1))
-    # print(length(lado_2))
-    
-    the_test <- cor.test(lado_1, lado_2, method = "pearson")
-    paste0(round(the_test$estimate, 2), " ", the_test$p.value)
+
+    the_test <- cor.test(lado_x, lado_y, method = "pearson")
   })
+  
+  #Correlation
+  output$correlation <- renderText({
+    round(the_correlatio()$estimate, 2)
+  })
+  
+  #p Value
+  output$pvalue <- renderText({
+    pvalue(the_correlatio()$p.value)
+  })
+  
   
 }
 
