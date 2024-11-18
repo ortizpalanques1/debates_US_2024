@@ -1,11 +1,45 @@
+/* tags */
 
-.title{
+h1{
+  font-size: 50px;
+  background-color: #1E2952;
+  color: #B9D9EB;
+  text-align: center;
+} 
+
+h2{
+  font-size: 30px;
   background-color: #1E2952;
   color: #B9D9EB;
   text-align: center;
 }
 
+h3{
+  font-size: 20px;
+  text-align: center;
+}
+
+p{
+  font-size: 18px;
+  color:  #B9D9EB;
+}
+
+
+/* classes */
+
 .column_selection{
   background-color: #1E2952;
   color: #B9D9EB;
+}
+
+.minitext{
+  color: #B9D9EB;
+  font-size: 18px;
+  text-align: center;
+}
+
+.title{
+  background-color: #1E2952;
+  color: #B9D9EB;
+  text-align: center;
 }

@@ -17,14 +17,12 @@ ui <- fluidPage(
   fluidRow(
     h1(
       "United States Presidential Debates (2024)",
-      #style = "background-color: yellow;"
-      class = "title"
       )
   ),
   fluidRow(
     column(
       2,
-      class = "column_selection",
+      #class = "column_selection",
       h2(selector_title),
       selectInput("candidate_1",
                   "Candidate 1",
@@ -40,18 +38,35 @@ ui <- fluidPage(
         column(
           6,
           plotOutput("candidates")
+        ),
+        column(
+          2,
+          h3(explain_graph_title),
+          p(explain_graph)
         )
       ),
       fluidRow(
         column(
           2,
-          h4(correlatio),
-          textOutput("correlation")
+          fluidRow(
+            h3(correlatio),
+          ),
+          fluidRow(
+            class = "minitext",
+            textOutput("correlation")
+          )
         ),
         column(
           2,
-          h4(the_pvalue),
-          textOutput("pvalue")
+          fluidRow(
+            h3(the_pvalue)
+          ),
+          fluidRow(
+            class = "minitext",
+            textOutput("pvalue")
+            # ,
+            # textOutput("word01")
+          )
         )
       )
     )
@@ -104,6 +119,7 @@ server <- function(input, output) {
       scale_x_log10(labels = scales::percent)+
       scale_y_log10(labels = scales::percent)+
       labs(
+        title = "Comparison in The Use of Words",
         x = candidate_x_name(),
         y = candidate_y_name()
       )+
@@ -114,7 +130,8 @@ server <- function(input, output) {
         panel.background = element_rect(fill = "#fdfd96"),
         panel.grid.major = element_line(color = "grey"),
         panel.grid.minor = element_line(color = "white"),
-        plot.background = element_rect(fill = "white")
+        plot.background = element_rect(fill = "white"),
+        plot.title = element_text(family =  "TT Times New Roman", face = "bold", color = "black", size = 24)
       )
   })
   
@@ -130,13 +147,21 @@ server <- function(input, output) {
   
   #Correlation
   output$correlation <- renderText({
-    round(the_correlatio()$estimate, 2)
+    rvalue(the_correlatio()$estimate)
   })
   
   #p Value
   output$pvalue <- renderText({
     pvalue(the_correlatio()$p.value)
   })
+  
+  # deborah <- reactive({
+  #   most_used_word(candidate_both(), candidate_both()$proportion.x, "word")
+  # })
+  # 
+  # output$word01 <- renderText({
+  #     deborah()
+  # })
   
   
 }
