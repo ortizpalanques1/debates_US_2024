@@ -19,6 +19,11 @@ h3{
   text-align: center;
 }
 
+h4{
+  font-size: 18px;
+  text-align: center;
+}
+
 p{
   font-size: 18px;
   color:  #B9D9EB;
@@ -35,6 +40,14 @@ p{
 .minitext{
   color: #B9D9EB;
   font-size: 18px;
+  text-align: center;
+}
+
+.muw{
+  color: #ffffff;
+  font-size: 25px;
+  font-style: italic;
+  font-weight: bold;
   text-align: center;
 }
 

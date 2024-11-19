@@ -7,6 +7,7 @@ source("www/functions.R")
 # debates_2024_uw_clean_ss = All the words after stop_words
 # candidates_data
 # person_colors
+print(candidates_data)
 
 # Define UI for application that draws a histogram
 ui <- fluidPage(
@@ -43,6 +44,32 @@ ui <- fluidPage(
           2,
           h3(explain_graph_title),
           p(explain_graph)
+        ),
+        column(
+          4,
+          h2(most_used_word_text),
+          fluidRow(
+            column(
+              6,
+              fluidRow(
+                h4(textOutput("name_x"))
+              ),
+              fluidRow(
+                class = "muw",
+                textOutput("muw_x")
+              )
+            ),
+            column(
+              6,
+              fluidRow(
+                h4(textOutput("name_y"))
+              ),
+              fluidRow(
+                class = "muw",
+                textOutput("muw_y")
+              )
+            )
+          )
         )
       ),
       fluidRow(
@@ -64,8 +91,6 @@ ui <- fluidPage(
           fluidRow(
             class = "minitext",
             textOutput("pvalue")
-            # ,
-            # textOutput("word01")
           )
         )
       )
@@ -114,7 +139,7 @@ server <- function(input, output) {
   output$candidates <- renderPlot({
     ggplot(candidate_both(), aes(x = proportion.x, y = proportion.y, color = abs(proportion.y - proportion.x)))+
       geom_abline(color = "darkgreen", lty =2)+
-      geom_point(alpha = 0.05, size = 2.5, color = "#ff6500")+
+      geom_point(alpha = 0.05, size = 2.5, color = "#a00000")+
       geom_text(aes(label = word), check_overlap = TRUE, vjust = 1.5, color = "black")+
       scale_x_log10(labels = scales::percent)+
       scale_y_log10(labels = scales::percent)+
@@ -127,9 +152,9 @@ server <- function(input, output) {
         axis.title = element_text(family =  "TT Times New Roman", face = "bold", color = "black", size = 14),
         axis.text = element_text(family =  "TT Times New Roman", face = "bold", color = "black", size = 10),
         legend.position = "none",
-        panel.background = element_rect(fill = "#fdfd96"),
-        panel.grid.major = element_line(color = "grey"),
-        panel.grid.minor = element_line(color = "white"),
+        panel.background = element_rect(fill = "#afd8d8"),
+        panel.grid.major = element_line(color = "#b8b8b8"),
+        panel.grid.minor = element_line(color = "#afd8d8"),
         plot.background = element_rect(fill = "white"),
         plot.title = element_text(family =  "TT Times New Roman", face = "bold", color = "black", size = 24)
       )
@@ -155,15 +180,26 @@ server <- function(input, output) {
     pvalue(the_correlatio()$p.value)
   })
   
-  # deborah <- reactive({
-  #   most_used_word(candidate_both(), candidate_both()$proportion.x, "word")
-  # })
-  # 
-  # output$word01 <- renderText({
-  #     deborah()
-  # })
+  # Most used word
+  output$name_x <- renderText({
+    nombre_x <- candidates_data$person[candidates_data$selection == candidate_x_name()]
+    nombre_x
+  })
   
+  output$name_y <- renderText({
+    nombre_y <- candidates_data$person[candidates_data$selection == candidate_y_name()]
+    nombre_y
+  })
   
+  output$muw_x <- renderText({
+    deborah <- most_used_word(candidate_both()$word, candidate_both()$proportion.x)
+    deborah[which(!is.na(deborah))]
+  })
+  
+  output$muw_y <- renderText({
+    rachel <- most_used_word(candidate_both()$word, candidate_both()$proportion.y)
+    rachel[which(!is.na(rachel))]
+  })
 }
 
 # Run the application 
