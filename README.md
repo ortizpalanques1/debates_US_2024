@@ -87,6 +87,8 @@ Build a Shiny App that allow the researcher to evaluate similarities between to 
 3. Design the main page with an area for the graph and some visualization (gauge or other to visualize the Pearson's correlation).
 4. Not all the space must be used. We may want to add some elements in the future.
 
+### Sentiment Analysis
+For this section of the project, we will select one *lexicon*. The *nrc* lexicon, with different sentiments, seems to be the mos appropriate. However, some word represents different sentiments and this could be a problem. The *AFINN* lexicon could provide a 
 
 ## References
 1. Schloss, P. [Connecting an Existing RStudio Project to Git and GitHub (CC145)](https://www.youtube.com/watch?v=bUoN85QvC10).
