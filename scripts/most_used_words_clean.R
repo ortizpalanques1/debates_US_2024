@@ -1,6 +1,7 @@
 # 3. Number of relevant words.
 # Libraries
 source("scripts/most_used_words.R")
+library(textdata)
 library(tidyverse)
 library(tidytext)
 data("stop_words")
@@ -132,5 +133,44 @@ debates_2024_uw_clean_ss_proprotions <- debates_2024_uw_clean_ss %>%
   mutate(proportion = n/sum(n),
          selection = paste0(person, " ", the_date)) 
 
+# All words with proportions. No Stop words
+debates_2024_uw_clean_nss <- debates_2024 %>% 
+  mutate(transcript = gsub("Donald Trump", "donald_trump", transcript)) %>% 
+  mutate(transcript = gsub("Trump", "donald_trump", transcript)) %>%
+  mutate(transcript = gsub("Kamala Harris", "kamala_harris", transcript)) %>% 
+  mutate(transcript = gsub("Harris", "kamala_harris", transcript)) %>% 
+  mutate(transcript = gsub("Joe Biden", "joe_biden", transcript)) %>% 
+  mutate(transcript = gsub("Biden", "joe_biden", transcript)) %>% 
+  mutate(transcript = gsub("Governor Walz", "tim_walz", transcript)) %>% 
+  mutate(transcript = gsub("Tim_Walz", "tim_walz", transcript)) %>%
+  mutate(transcript = gsub("Walz", "tim_walz", transcript)) %>% 
+  mutate(transcript = gsub("Tim", "tim_walz", transcript)) %>% 
+  mutate(transcript = gsub("Senator", "senator", transcript)) %>%
+  mutate(transcript = gsub("senator Vance", "jd_vance", transcript)) %>% 
+  mutate(transcript = gsub("Vance", "jd_vance", transcript)) %>%
+  mutate(transcript = gsub("jobs", "job", transcript, ignore.case = TRUE)) %>% 
+  filter(!grepl("^\\(", transcript)) %>% 
+  filter(!person %in% all_participants$person[all_participants$candidacy == "Journalist"]) %>% 
+  unnest_tokens(word, transcript) %>%
+  mutate(word = str_replace(word, "women", "woman")) %>%
+  mutate(word = str_replace(word, "men", "man")) %>%
+  mutate(word = str_replace(word, "’", "'")) %>% 
+  mutate(word = ifelse(grepl("'s$", word) | grepl("’s$", word),
+                       str_sub(word, 1, (nchar(word)-2)),
+                       word)) %>%  
+  group_by(the_date, person) %>% 
+  count(word) %>% 
+  filter(!grepl("^\\d+", word)) %>% 
+  #anti_join(stop_words) %>% 
+  arrange(desc(n), .by_group = TRUE) 
+
+# Bing sentiment
+bing_sentiment <- get_sentiments("bing")
+
 # Save file and sent to debates_2024_app/data  
-save(person_colors, candidates_data, debates_2024_uw_clean_ss_proprotions, file = "data_debate_2024.RData")
+save(person_colors, 
+     candidates_data, 
+     debates_2024_uw_clean_ss_proprotions, 
+     debates_2024_uw_clean_nss,
+     bing_sentiment,
+     file = "data_debate_2024.RData")

@@ -24,7 +24,7 @@ ui <- fluidPage(
     column(
       2,
       #class = "column_selection",
-      h2(selector_title),
+      h3(selector_title),
       selectInput("candidate_1",
                   "Candidate 1",
                   choices = candidates_data$selection),
@@ -36,18 +36,21 @@ ui <- fluidPage(
     column(
       10,
       fluidRow(
+        h2('General Comparison')
+      ),
+      fluidRow(
         column(
           6,
           plotOutput("candidates")
         ),
         column(
           2,
-          h3(explain_graph_title),
+          h4(explain_graph_title),
           p(explain_graph)
         ),
         column(
           4,
-          h2(most_used_word_text),
+          h3(most_used_word_text),
           fluidRow(
             column(
               6,
@@ -76,7 +79,7 @@ ui <- fluidPage(
         column(
           2,
           fluidRow(
-            h3(correlatio),
+            h4(correlatio),
           ),
           fluidRow(
             class = "minitext",
@@ -86,11 +89,44 @@ ui <- fluidPage(
         column(
           2,
           fluidRow(
-            h3(the_pvalue)
+            h4(the_pvalue)
           ),
           fluidRow(
             class = "minitext",
             textOutput("pvalue")
+          )
+        )
+      ),
+      fluidRow(
+        h2("Sentiment Analysis")
+      ),
+      fluidRow(
+        column(
+          6,
+          fluidRow(
+            h3("Proportion of Sentiment")
+          ),
+          fluidRow(
+            column(
+              6,
+              fluidRow(
+                h4(textOutput("name_proportion_x"))
+              ),
+              fluidRow(
+                class = "minitext",
+                tableOutput("proportion_x")
+              )
+            ),
+            column(
+              6,
+              fluidRow(
+                h4(textOutput("name_proportion_y"))
+              ),
+              fluidRow(
+                class = "minitext",
+                tableOutput("proportion_y")
+              )
+            )
           )
         )
       )
@@ -199,6 +235,26 @@ server <- function(input, output) {
   output$muw_y <- renderText({
     rachel <- most_used_word(candidate_both()$word, candidate_both()$proportion.y)
     rachel[which(!is.na(rachel))]
+  })
+  
+  # Sentiment Analysis
+  #Proportion of sentiment
+  output$name_proportion_x <- renderText({
+    candidate_x_name()
+  })
+  
+  output$name_proportion_y <- renderText({
+    candidate_y_name()
+  })
+  
+  output$proportion_x <- renderTable({
+    sentiment_x <- sentiment_total(input$candidate_1, debates_2024_uw_clean_nss, bing_sentiment)
+    sentiment_x
+  })
+  
+  output$proportion_y <- renderTable({
+    sentiment_y <- sentiment_total(input$candidate_2, debates_2024_uw_clean_nss, bing_sentiment)
+    sentiment_y
   })
 }
 
