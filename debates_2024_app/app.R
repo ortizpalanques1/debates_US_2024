@@ -36,7 +36,7 @@ ui <- fluidPage(
     column(
       10,
       fluidRow(
-        h2('General Comparison')
+        h2(title_section_01)
       ),
       fluidRow(
         column(
@@ -98,7 +98,7 @@ ui <- fluidPage(
         )
       ),
       fluidRow(
-        h2("Sentiment Analysis")
+        h2(title_section_02)
       ),
       fluidRow(
         column(
@@ -127,6 +127,20 @@ ui <- fluidPage(
                 tableOutput("proportion_y")
               )
             )
+          )
+        ),
+        column(
+          6,
+          fluidRow(
+            h3("Sentiment: Ten Most Common Words")
+          ),
+          column(
+            6,
+            plotOutput("sentiment_graph_x")
+          ),
+          column(
+            6,
+            plotOutput("sentiment_graph_y")
           )
         )
       )
@@ -255,6 +269,17 @@ server <- function(input, output) {
   output$proportion_y <- renderTable({
     sentiment_y <- sentiment_total(input$candidate_2, debates_2024_uw_clean_nss, bing_sentiment)
     sentiment_y
+  })
+  
+  #Sentiment Graph
+  output$sentiment_graph_x <- renderPlot({
+    sentiment_g_x <- sentiment_graph(input$candidate_1, debates_2024_uw_clean_nss, bing_sentiment)
+    sentiment_g_x
+  })
+  
+  output$sentiment_graph_y <- renderPlot({
+    sentiment_g_y <- sentiment_graph(input$candidate_2, debates_2024_uw_clean_nss, bing_sentiment)
+    sentiment_g_y
   })
 }
 
