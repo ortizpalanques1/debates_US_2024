@@ -1,0 +1,68 @@
+word, type_1, type_2
+no, adverb,
+No, adverb,
+not, adverb,
+Not, adverb,
+never, adverb,
+Never, adverb,
+none, pronoun, adverb
+None, pronoun, adverb
+nobody, pronoun, 
+Nobody, pronoun,
+nothing, pronoun, 
+Nothing, pronoun,  
+neither, pronoun, adverb
+Neither, pronoun, adverb
+nor, pronoun, adverb
+Nor, pronoun, adverb
+nothing, pronoun, 
+Nothing, pronoun, 
+nowhere, pronoun, 
+Nowhere, pronoun, 
+rarely, adverb,
+Rarely, adverb,
+seldom, adverb,
+Seldom, adverb,
+little, adjective,
+Little, adjective,
+few, adjective,
+Few, adjective,
+hardly, adverb,
+Hardly, adverb,
+scarcely, adverb,
+Scarcely, adverb,
+don't, verbal,
+Don't, verbal,
+doesn't, verbal,
+Doesn't, verbal,
+didn't, verbal,
+Didn't, verbal,
+aren't, verbal,
+Aren't, verbal,
+isn't, verbal,
+Isn't, verbal,
+wasn't, verbal,
+Wasn't, verbal,
+weren't, verbal,
+Weren't, verbal,
+won't, verbal,
+Won't, verbal,
+hasn't, verbal,
+Hasn't, verbal,
+haven't, verbal,
+Haven't, verbal,
+hadn't, verbal,
+Hadn't, verbal,
+can't, verbal,
+Can't, verbal,
+couldn't, verbal,
+Couldn't, verbal,
+ain't, verbal,
+Ain't, verbal,
+wouldn't, verbal,
+Wouldn't, verbal,
+
+
+
+
+
