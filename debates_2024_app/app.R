@@ -15,134 +15,146 @@ ui <- fluidPage(
     tags$link(rel = "stylesheet", type = "text/css", href = "style.css")
   ),
   class = "column_selection",
-  fluidRow(
-    h1(
-      "United States Presidential Debates (2024)",
+  tabsetPanel(
+    tabPanel("General View",
+      fluidRow(
+        h1(
+          "United States Presidential Debates (2024)",
+          )
+      ),
+      fluidRow(
+        column(
+          2,
+          #class = "column_selection",
+          h3(selector_title),
+          selectInput("candidate_1",
+                      "Candidate 1",
+                      choices = candidates_data$selection),
+          
+          selectInput("candidate_2",
+                      "Candidate 2",
+                      choices = NULL)
+        ),
+        column(
+          10,
+          fluidRow(
+            h2(title_section_01)
+          ),
+          fluidRow(
+            column(
+              6,
+              plotOutput("candidates")
+            ),
+            column(
+              2,
+              h4(explain_graph_title),
+              p(explain_graph)
+            ),
+            column(
+              4,
+              h3(most_used_word_text),
+              fluidRow(
+                column(
+                  6,
+                  fluidRow(
+                    h4(textOutput("name_x"))
+                  ),
+                  fluidRow(
+                    class = "muw",
+                    textOutput("muw_x")
+                  )
+                ),
+                column(
+                  6,
+                  fluidRow(
+                    h4(textOutput("name_y"))
+                  ),
+                  fluidRow(
+                    class = "muw",
+                    textOutput("muw_y")
+                  )
+                )
+              )
+            )
+          ),
+          fluidRow(
+            column(
+              2,
+              fluidRow(
+                h4(correlatio),
+              ),
+              fluidRow(
+                class = "minitext",
+                textOutput("correlation")
+              )
+            ),
+            column(
+              2,
+              fluidRow(
+                h4(the_pvalue)
+              ),
+              fluidRow(
+                class = "minitext",
+                textOutput("pvalue")
+              )
+            )
+          ),
+          fluidRow(
+            h2(title_section_02)
+          ),
+          fluidRow(
+            column(
+              6,
+              fluidRow(
+                h3("Proportion of Sentiment")
+              ),
+              fluidRow(
+                column(
+                  6,
+                  fluidRow(
+                    h4(textOutput("name_proportion_x"))
+                  ),
+                  fluidRow(
+                    class = "minitext",
+                    tableOutput("proportion_x")
+                  )
+                ),
+                column(
+                  6,
+                  fluidRow(
+                    h4(textOutput("name_proportion_y"))
+                  ),
+                  fluidRow(
+                    class = "minitext",
+                    tableOutput("proportion_y")
+                  )
+                )
+              )
+            ),
+            column(
+              6,
+              fluidRow(
+                h3("Sentiment: Ten Most Common Words")
+              ),
+              column(
+                6,
+                plotOutput("sentiment_graph_x")
+              ),
+              column(
+                6,
+                plotOutput("sentiment_graph_y")
+              )
+            )
+          )
+        )
       )
-  ),
-  fluidRow(
-    column(
-      2,
-      #class = "column_selection",
-      h3(selector_title),
-      selectInput("candidate_1",
-                  "Candidate 1",
-                  choices = candidates_data$selection),
-      
-      selectInput("candidate_2",
-                  "Candidate 2",
-                  choices = NULL)
     ),
-    column(
-      10,
+    tabPanel("Vocabulary Usage",
       fluidRow(
-        h2(title_section_01)
+        h2(title_section_03)
       ),
       fluidRow(
-        column(
-          6,
-          plotOutput("candidates")
-        ),
-        column(
-          2,
-          h4(explain_graph_title),
-          p(explain_graph)
-        ),
-        column(
-          4,
-          h3(most_used_word_text),
-          fluidRow(
-            column(
-              6,
-              fluidRow(
-                h4(textOutput("name_x"))
-              ),
-              fluidRow(
-                class = "muw",
-                textOutput("muw_x")
-              )
-            ),
-            column(
-              6,
-              fluidRow(
-                h4(textOutput("name_y"))
-              ),
-              fluidRow(
-                class = "muw",
-                textOutput("muw_y")
-              )
-            )
-          )
-        )
-      ),
-      fluidRow(
-        column(
-          2,
-          fluidRow(
-            h4(correlatio),
-          ),
-          fluidRow(
-            class = "minitext",
-            textOutput("correlation")
-          )
-        ),
-        column(
-          2,
-          fluidRow(
-            h4(the_pvalue)
-          ),
-          fluidRow(
-            class = "minitext",
-            textOutput("pvalue")
-          )
-        )
-      ),
-      fluidRow(
-        h2(title_section_02)
-      ),
-      fluidRow(
-        column(
-          6,
-          fluidRow(
-            h3("Proportion of Sentiment")
-          ),
-          fluidRow(
-            column(
-              6,
-              fluidRow(
-                h4(textOutput("name_proportion_x"))
-              ),
-              fluidRow(
-                class = "minitext",
-                tableOutput("proportion_x")
-              )
-            ),
-            column(
-              6,
-              fluidRow(
-                h4(textOutput("name_proportion_y"))
-              ),
-              fluidRow(
-                class = "minitext",
-                tableOutput("proportion_y")
-              )
-            )
-          )
-        ),
-        column(
-          6,
-          fluidRow(
-            h3("Sentiment: Ten Most Common Words")
-          ),
-          column(
-            6,
-            plotOutput("sentiment_graph_x")
-          ),
-          column(
-            6,
-            plotOutput("sentiment_graph_y")
-          )
-        )
+        h2(title_section_04)
       )
     )
   )
