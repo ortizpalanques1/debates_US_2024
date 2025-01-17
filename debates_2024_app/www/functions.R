@@ -1,5 +1,6 @@
 # Functions ####
 
+# p Value
 pvalue <- function(x){
   tryCatch(
     {
@@ -20,13 +21,13 @@ rvalue <- function(x){
   paste0("r = ", round(x,2))
 }
 
-
+# Most Used Word (Only One)
 most_used_word <- function(data, columna){
   parlatio <- data[columna == max(columna, na.rm = TRUE)]
   return(parlatio)
 }
 
-
+# Sentiment Analysis
 sentiment_total <- function(this_debate, texto, lexic_00){
   
   this_name <- str_extract(this_debate, "(?:(?! [[:digit:]]).)*")
@@ -53,6 +54,7 @@ sentiment_total <- function(this_debate, texto, lexic_00){
   return(sentimental_words)
 }
 
+#Sentiment Graph
 sentiment_graph <- function(this_debate, texto, lexic_00){
   
   this_name <- str_extract(this_debate, "(?:(?! [[:digit:]]).)*")
@@ -101,14 +103,64 @@ sentiment_graph <- function(this_debate, texto, lexic_00){
   return(sentimental_graph)
 }
 
-# Texts
+# Word Counter by Participant
+word_counter_by_participant <- function(file){
+  the_processed_file <- file %>% 
+    filter(!grepl("^\\(", transcript)) %>% 
+    unnest_tokens(word, transcript) %>% 
+    group_by(the_date, person) %>% 
+    summarise(Words = n()) %>% 
+    arrange(desc(Words), .by_group = TRUE)
+  return(the_processed_file)
+}
+
+# Word Counter by Participant Graph
+word_counter_by_participant_gr <- function(file, the_colors){
+  the_graph <- ggplot(file, aes(x = reorder(person, Words), y = Words, fill = person, label = Words))+
+    geom_col()+
+    scale_y_continuous(expand = c(0,0), limits = c(0,9000))+
+    facet_wrap(~the_date, nrow = 3, scales = "free")+
+    scale_fill_manual(values = the_colors)+
+    coord_flip()+
+    geom_text(aes(y=700), fontface="bold", color="white", hjust = 1)+
+    labs(
+      title = "2024 US Elections: Words by Candidate/Debate",
+      caption = "Sources: CNN, MSN, Usa Today"
+    )+
+    theme(
+      axis.title.y = element_blank(),
+      axis.text = element_text(color = "white", face = "bold"),
+      axis.ticks = element_blank(),
+      legend.position = "off",
+      strip.background = element_rect(fill = "#3D0C02"),
+      strip.text = element_text(colour = "white", face = "bold"),
+      panel.background = element_rect(fill = "#C5B6B3"),
+      panel.grid = element_line(color = "#C5B6B3"),
+      plot.background = element_rect(fill = "#2c3840"),
+      plot.title = element_text(hjust = 0.5),
+      plot.title.position = "plot",
+      title = element_text(color = "white")
+    )
+  return(the_graph)
+}
+
+
+# Texts ####
 correlatio <- "Pearson's Correlation"
 most_used_word_text <- "Candidates' Most Used Word"
 selector_title <- "Select Two Candidates"
+selector_title_vocabulary <- "General Analysis"
 explain_graph <- "This graph shows the proportion of relevant words for each candidate.\nBecause we use a logarithmic scale many dots seem closer than they really are.\nFor this reason, the intensity of the dot's color denotes how close both proportions are."
 explain_graph_title <- "What This Graph Represents"
 the_pvalue <- "p Value"
+title_tabs <- "United States Presidential Debates (2024)"
 title_section_01 <- "General Comparison"
 title_section_02 <- "Sentiment Analysis"
-title_section_03 <- "Vocabulary Diversity"
+title_section_03 <- "Synthesis of the Vocabulary"
 title_section_04 <- "TF-IDF Analysis"
+
+
+# Variables ####
+# Selector Vocabulary tab
+vocabulary_selector <- c("Number of words", "Unique Words", "Vocabulary diversity")
+

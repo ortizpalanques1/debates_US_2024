@@ -1,6 +1,7 @@
 library(shiny)
 library(tidyverse)
 library(tidyr)
+library(tidytext)
 load("data/data_debate_2024.RData")
 source("www/functions.R")
 # Files to retrive
@@ -18,9 +19,7 @@ ui <- fluidPage(
   tabsetPanel(
     tabPanel("General View",
       fluidRow(
-        h1(
-          "United States Presidential Debates (2024)",
-          )
+        h1(title_tabs)
       ),
       fluidRow(
         column(
@@ -151,7 +150,20 @@ ui <- fluidPage(
     ),
     tabPanel("Vocabulary Usage",
       fluidRow(
-        h2(title_section_03)
+        h1(title_tabs)
+      ),
+      fluidRow(
+        h2(title_section_03),
+        column(
+          2,
+          selectInput("vocabulary_analysis",
+                      "Select the Analysis",
+                      choices = vocabulary_selector),
+        ),
+        column(
+          9,
+          plotOutput("vocabulary_analysis_plot")
+        )
       ),
       fluidRow(
         h2(title_section_04)
@@ -292,6 +304,11 @@ server <- function(input, output) {
   output$sentiment_graph_y <- renderPlot({
     sentiment_g_y <- sentiment_graph(input$candidate_2, debates_2024_uw_clean_nss, bing_sentiment)
     sentiment_g_y
+  })
+  
+  output$vocabulary_analysis_plot <- renderPlot({
+    word_count_candidate <- word_counter_by_participant_gr(word_counter_by_participant(debates_2024), person_colors)
+    word_count_candidate
   })
 }
 

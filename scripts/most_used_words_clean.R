@@ -170,6 +170,7 @@ bing_sentiment <- get_sentiments("bing")
 # Save file and sent to debates_2024_app/data  
 save(person_colors, 
      candidates_data, 
+     debates_2024,
      debates_2024_uw_clean_ss_proprotions, 
      debates_2024_uw_clean_nss,
      bing_sentiment,

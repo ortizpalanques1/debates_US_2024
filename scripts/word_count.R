@@ -2,10 +2,12 @@
 # Libraries ####
 library(tidyverse)
 library(tidytext)
+source("scripts/clean_texts.R")
 
 # Create the tibble by word ####
 # Vector with names
 # all_the_names. Already created.
+all_the_names <- c("JAKE TAPPER", "DANA BASH", "JOE BIDEN", "DONALD TRUMP", "DAVID MUIR", "LINSEY DAVIS", "KAMALA HARRIS", "NORAH O'DONNELL", "MARGARET BRENNAN", "TIM WALZ", "JD VANCE") 
 
 # Vector with colors
 all_the_names_colors <- c("#58d963","#58d963","#00aef3","#e81b23","#58d963","#58d963","#00aef3","#58d963","#58d963","#00aef3","#e81b23")
@@ -18,8 +20,9 @@ debates_2024_by_word <- debates_2024 %>%
   unnest_tokens(word, transcript) %>% 
   group_by(the_date, person) %>% 
   summarise(Words = n()) %>% 
-  arrange(desc(Words), .by_group = TRUE) %>% 
-  ggplot(aes(x = reorder(person, Words), y = Words, fill = person, label = Words))+
+  arrange(desc(Words), .by_group = TRUE)
+
+debates_2024_by_word_gr <- ggplot(debates_2024_by_word, aes(x = reorder(person, Words), y = Words, fill = person, label = Words))+
   geom_col()+
   scale_y_continuous(expand = c(0,0), limits = c(0,9000))+
   facet_wrap(~the_date, nrow = 3, scales = "free")+
@@ -45,5 +48,5 @@ debates_2024_by_word <- debates_2024 %>%
     title = element_text(color = "white")
   )
 
-ggsave("graph/word_count.png", debates_2024_by_word, units = "cm", width = 16, height = 16, device = "png")
+ggsave("graph/word_count.png", debates_2024_by_word_gr, units = "cm", width = 16, height = 16, device = "png")
   
