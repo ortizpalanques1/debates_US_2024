@@ -162,7 +162,7 @@ ui <- fluidPage(
                       selected = NULL),
         ),
         column(
-          9,
+          8,
           plotOutput("vocabulary_analysis_plot")
         )
       ),
@@ -310,22 +310,14 @@ server <- function(input, output) {
   })
   
   # TAB 2 #
-  # Synthesis of the Vocabulary #
-  
-  
-  
-  # output$vocabulary_analysis_plot <- renderPlot({
-  #   word_count_candidate <- word_counter_by_participant_gr(word_counter_by_participant(debates_2024), person_colors)
-  #   word_count_candidate
-  # })
-  
+  # Vocabulary Synthesis
   output$vocabulary_analysis_plot <- renderPlot({
     analytical_graph <- if(input$vocabulary_analysis == vocabulary_selector[1]){
       word_counter_by_participant_gr(word_counter_by_participant(debates_2024), person_colors)
     } else if(input$vocabulary_analysis == vocabulary_selector[2]){
       unique_words_graph(unique_words(debates_2024, all_participants), person_colors)
-    } else {
-      plot(x <- sort(rnorm(47)), type = "s", main = "plot(x, type = \"s\")")
+    } else if(input$vocabulary_analysis == vocabulary_selector[3]){
+      vocabulary_diversity_graph(vocabulary_diversity(word_counter_by_participant(debates_2024), number_of_unique_words_person_and_date(unique_words(debates_2024, all_participants))), person_colors)
     }
     analytical_graph
   })

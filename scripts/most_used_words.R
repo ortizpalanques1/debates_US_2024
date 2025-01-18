@@ -55,16 +55,24 @@ ggsave("graph/word_unique_words.png", debates_2024_uw_graph, units = "cm", width
 debates_2024_uw_special <- debates_2024_uw %>% 
   mutate(candidate_debate_join = paste0(person, " ", the_date))
 
-debates_2024_total_words <- debates_2024 %>% 
-  filter(!grepl("^\\(", transcript)) %>% 
-  filter(!person %in% all_participants$person[all_participants$candidacy == "Journalist"]) %>% 
-  unnest_tokens(word, transcript) %>% 
-  group_by(the_date, person) %>% 
-  summarise(Words = n()) %>% 
-  mutate(candidate_debate_join = paste0(person, " ", the_date))
+# debates_2024_total_words <- debates_2024 %>% 
+#   filter(!grepl("^\\(", transcript)) %>% 
+#   filter(!person %in% all_participants$person[all_participants$candidacy == "Journalist"]) %>% 
+#   unnest_tokens(word, transcript) %>% 
+#   group_by(the_date, person) %>% 
+#   summarise(Words = n()) %>% 
+#   mutate(candidate_debate_join = paste0(person, " ", the_date))
+# 
+# debates_2024_vocabulary_diversity <- debates_2024_total_words %>% 
+#   left_join(., debates_2024_uw_special[, c("unique_words", "candidate_debate_join")], by = "candidate_debate_join") %>% 
+#   mutate(vocabulary_diversity = round(unique_words/Words,2),
+#          candidate_debate = paste0(person,
+#                                    "\n",
+#                                    format(as.Date(the_date, format="%Y-%m-%d"),"%B")))
 
-debates_2024_vocabulary_diversity <- debates_2024_total_words %>% 
-  left_join(., debates_2024_uw_special[, c("unique_words", "candidate_debate_join")], by = "candidate_debate_join") %>% 
+debates_2024_vocabulary_diversity_V2 <- debates_2024_by_word %>% 
+  mutate(candidate_debate_join = paste0(person, " ", the_date)) %>% 
+  right_join(., debates_2024_uw_special[, c("unique_words", "candidate_debate_join")], by = "candidate_debate_join") %>% 
   mutate(vocabulary_diversity = round(unique_words/Words,2),
          candidate_debate = paste0(person,
                                    "\n",

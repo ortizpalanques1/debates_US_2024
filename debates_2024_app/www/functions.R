@@ -117,12 +117,12 @@ word_counter_by_participant <- function(file){
 # Word Counter by Participant Graph
 word_counter_by_participant_gr <- function(file, the_colors){
   the_graph <- ggplot(file, aes(x = reorder(person, Words), y = Words, fill = person, label = Words))+
-    geom_col()+
+    geom_col(width = 0.9)+
     scale_y_continuous(expand = c(0,0), limits = c(0,9000))+
     facet_wrap(~the_date, nrow = 3, scales = "free")+
     scale_fill_manual(values = the_colors)+
     coord_flip()+
-    geom_text(aes(y=700), fontface="bold", color="white", size = 8, hjust = 1)+
+    geom_text(aes(y=700), fontface="bold", color="white", size = 6, hjust = 1)+
     labs(
       title = "2024 US Elections: Words by Candidate/Debate",
       caption = "Sources: CNN, MSN, Usa Today"
@@ -134,8 +134,8 @@ word_counter_by_participant_gr <- function(file, the_colors){
       legend.position = "off",
       strip.background = element_rect(fill = "#1E2952"),
       strip.text = element_text(family =  "TT Times New Roman", face = "bold", color = "white", size = 14),
-      panel.background = element_rect(fill = "#afd8d8"),
-      panel.grid = element_line(color = "#afd8d8"),
+      panel.background = element_rect(fill = "white"),
+      panel.grid = element_line(color = "white"),
       plot.background = element_rect(fill = "white"),
       plot.title = element_text(family =  "TT Times New Roman", face = "bold", color = "black", size = 24, hjust = 0.5),
       plot.title.position = "plot",
@@ -165,7 +165,7 @@ unique_words_graph <- function(file, the_colors){
                                      format(as.Date(the_date, format="%Y-%m-%d"),"%B"))) %>% 
     ggplot(aes(x = reorder(candidate_debate, unique_words), y = unique_words, fill = person, label = unique_words))+
     geom_col()+
-    geom_text(aes(y=700), fontface="bold", color="white", hjust = 1, size = 8)+
+    geom_text(aes(y=700), fontface="bold", color="white", hjust = 1, size = 10)+
     scale_y_continuous(expand = c(0,0), limits = c(0,1600))+
     labs(
       title = "Number of Unique Words by Candidate and Debate",
@@ -176,22 +176,74 @@ unique_words_graph <- function(file, the_colors){
     theme(
       axis.title.y = element_blank(),
       axis.text.x = element_blank(),
-      axis.text.y = element_text(color = "white", face = "bold"),
+      axis.text.y = element_text(family =  "TT Times New Roman", face = "bold", color = "black", size = 14),
       legend.position = "off",
-      strip.background = element_rect(fill = "#3D0C02"),
-      strip.text = element_text(colour = "white", face = "bold"),
-      # panel.background = element_rect(alpha("#C5B6B3", 1)),
-      # panel.grid = element_line(alpha("#C5B6B3", 1)),
-      panel.background = element_blank(),
-      panel.grid = element_blank(),
-      plot.background = element_rect(fill = "#2c3840"),
-      plot.title = element_text(hjust = 0.5),
+      panel.background = element_rect(fill = "white"),
+      panel.grid = element_line(color = "white"),
+      plot.background = element_rect(fill = "white"),
+      plot.title = element_text(family =  "TT Times New Roman", face = "bold", color = "black", size = 24, hjust = 0.5),
       plot.title.position = "plot",
-      title = element_text(color = "white")
+      title = element_text(color = "black")
     )
   return(debates_2024_uw_graph)
 }
 
+# Number of Unique words (debates_2024_uw_special)
+# The parameter for this function is: unique_words(debates_2024, all_participants)
+number_of_unique_words_person_and_date <- function(file){
+  debates_2024_uw_special <- file %>% 
+    mutate(candidate_debate_join = paste0(person, " ", the_date))
+  return(debates_2024_uw_special)
+}
+
+# Vocabulary Diversity
+vocabulary_diversity <- function(total_words, unique_words){
+  debates_2024_vocabulary_diversity_V2 <- total_words %>% 
+    mutate(candidate_debate_join = paste0(person, " ", the_date)) %>% 
+    right_join(., unique_words[, c("unique_words", "candidate_debate_join")], by = "candidate_debate_join") %>% 
+    mutate(vocabulary_diversity = round(unique_words/Words,2),
+           candidate_debate = paste0(person,
+                                     "\n",
+                                     format(as.Date(the_date, format="%Y-%m-%d"),"%B")))
+  return(debates_2024_vocabulary_diversity_V2)
+}
+
+# Vocabulary Diversity Graph
+vocabulary_diversity_graph <- function(file, the_colors){
+  debates_2024_vocabulary_diversity_graph <- ggplot(
+    file, 
+    aes(
+      x = reorder(candidate_debate, -vocabulary_diversity),
+      y = vocabulary_diversity,
+      fill = person,
+      label = vocabulary_diversity)
+  )+
+    geom_col()+
+    geom_text(aes(y=0.10), fontface="bold", color="white", hjust = 0.5, size = 8)+
+    scale_fill_manual(values = the_colors)+
+    scale_y_continuous(expand = c(0,0), limits = c(0,max(file$vocabulary_diversity)*1.05))+
+    labs(
+      title = "Vocabulary Diversity. 2024 US Candidates/Debate",
+      subtitle = "Number of Unique Words Divided by the Total Number of Words",
+      y = "Vocabulary Diversity"
+    )+
+    theme(
+      axis.title.x = element_blank(),
+      axis.text = element_text(family =  "TT Times New Roman", face = "bold", color = "black"),
+      axis.text.x = element_text(size = 14),
+      axis.text.y = element_text(size = 16),
+      axis.ticks.y = element_line(color = "black"),
+      legend.position = "off",
+      panel.background = element_blank(),
+      panel.grid = element_blank(),
+      plot.background = element_rect(fill = "white"),
+      plot.title = element_text(family =  "TT Times New Roman", face = "bold", color = "black", size = 24, hjust = 0.5),
+      plot.subtitle = element_text(family =  "TT Times New Roman", face = "bold", color = "black", hjust = 0.5),
+      plot.title.position = "plot",
+      title = element_text(color = "black")
+    )
+  return(debates_2024_vocabulary_diversity_graph)
+}
 
 
 # Texts ####
