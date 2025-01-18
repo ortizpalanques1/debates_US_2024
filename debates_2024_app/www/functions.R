@@ -122,27 +122,76 @@ word_counter_by_participant_gr <- function(file, the_colors){
     facet_wrap(~the_date, nrow = 3, scales = "free")+
     scale_fill_manual(values = the_colors)+
     coord_flip()+
-    geom_text(aes(y=700), fontface="bold", color="white", hjust = 1)+
+    geom_text(aes(y=700), fontface="bold", color="white", size = 8, hjust = 1)+
     labs(
       title = "2024 US Elections: Words by Candidate/Debate",
       caption = "Sources: CNN, MSN, Usa Today"
     )+
     theme(
       axis.title.y = element_blank(),
-      axis.text = element_text(color = "white", face = "bold"),
+      axis.text = element_text(family =  "TT Times New Roman", face = "bold", color = "black", size = 10),
       axis.ticks = element_blank(),
+      legend.position = "off",
+      strip.background = element_rect(fill = "#1E2952"),
+      strip.text = element_text(family =  "TT Times New Roman", face = "bold", color = "white", size = 14),
+      panel.background = element_rect(fill = "#afd8d8"),
+      panel.grid = element_line(color = "#afd8d8"),
+      plot.background = element_rect(fill = "white"),
+      plot.title = element_text(family =  "TT Times New Roman", face = "bold", color = "black", size = 24, hjust = 0.5),
+      plot.title.position = "plot",
+      title = element_text(color = "black")
+    )
+  return(the_graph)
+}
+
+# Unique Words
+unique_words <- function(file, people){
+  debates_2024_uw <- file %>% 
+    filter(!grepl("^\\(", transcript)) %>% 
+    filter(!person %in% people$person[people$candidacy == "Journalist"]) %>% 
+    unnest_tokens(word, transcript) %>% 
+    #anti_join(stop_words) %>% 
+    group_by(the_date, person) %>% 
+    count(word) %>% 
+    summarise(unique_words = n())
+  return(debates_2024_uw)
+}
+
+#Unique Words Graph
+unique_words_graph <- function(file, the_colors){
+  debates_2024_uw_graph <- file %>% 
+    mutate(candidate_debate = paste0(person,
+                                     "\n",
+                                     format(as.Date(the_date, format="%Y-%m-%d"),"%B"))) %>% 
+    ggplot(aes(x = reorder(candidate_debate, unique_words), y = unique_words, fill = person, label = unique_words))+
+    geom_col()+
+    geom_text(aes(y=700), fontface="bold", color="white", hjust = 1, size = 8)+
+    scale_y_continuous(expand = c(0,0), limits = c(0,1600))+
+    labs(
+      title = "Number of Unique Words by Candidate and Debate",
+      y = "Unique Words"
+    )+
+    scale_fill_manual(values = the_colors)+
+    coord_flip()+
+    theme(
+      axis.title.y = element_blank(),
+      axis.text.x = element_blank(),
+      axis.text.y = element_text(color = "white", face = "bold"),
       legend.position = "off",
       strip.background = element_rect(fill = "#3D0C02"),
       strip.text = element_text(colour = "white", face = "bold"),
-      panel.background = element_rect(fill = "#C5B6B3"),
-      panel.grid = element_line(color = "#C5B6B3"),
+      # panel.background = element_rect(alpha("#C5B6B3", 1)),
+      # panel.grid = element_line(alpha("#C5B6B3", 1)),
+      panel.background = element_blank(),
+      panel.grid = element_blank(),
       plot.background = element_rect(fill = "#2c3840"),
       plot.title = element_text(hjust = 0.5),
       plot.title.position = "plot",
       title = element_text(color = "white")
     )
-  return(the_graph)
+  return(debates_2024_uw_graph)
 }
+
 
 
 # Texts ####

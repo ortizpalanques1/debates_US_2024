@@ -158,7 +158,8 @@ ui <- fluidPage(
           2,
           selectInput("vocabulary_analysis",
                       "Select the Analysis",
-                      choices = vocabulary_selector),
+                      choices = vocabulary_selector,
+                      selected = NULL),
         ),
         column(
           9,
@@ -174,6 +175,8 @@ ui <- fluidPage(
 
 # Define server logic required to draw a histogram
 server <- function(input, output) {
+  
+  # TAB 1 #
   
   # Reactive IU for the Selection N. 2
   candidate_alter <- reactive({
@@ -306,9 +309,25 @@ server <- function(input, output) {
     sentiment_g_y
   })
   
+  # TAB 2 #
+  # Synthesis of the Vocabulary #
+  
+  
+  
+  # output$vocabulary_analysis_plot <- renderPlot({
+  #   word_count_candidate <- word_counter_by_participant_gr(word_counter_by_participant(debates_2024), person_colors)
+  #   word_count_candidate
+  # })
+  
   output$vocabulary_analysis_plot <- renderPlot({
-    word_count_candidate <- word_counter_by_participant_gr(word_counter_by_participant(debates_2024), person_colors)
-    word_count_candidate
+    analytical_graph <- if(input$vocabulary_analysis == vocabulary_selector[1]){
+      word_counter_by_participant_gr(word_counter_by_participant(debates_2024), person_colors)
+    } else if(input$vocabulary_analysis == vocabulary_selector[2]){
+      unique_words_graph(unique_words(debates_2024, all_participants), person_colors)
+    } else {
+      plot(x <- sort(rnorm(47)), type = "s", main = "plot(x, type = \"s\")")
+    }
+    analytical_graph
   })
 }
 
