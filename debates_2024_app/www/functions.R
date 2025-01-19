@@ -247,21 +247,28 @@ vocabulary_diversity_graph <- function(file, the_colors){
 
 
 # Texts ####
+# Tab 1 and global texts
 correlatio <- "Pearson's Correlation"
+explain_graph <- "This graph shows the proportion of relevant words for each candidate.\nBecause we use a logarithmic scale many dots seem closer than they really are.\nFor this reason, the intensity of the dot's color denotes how close both proportions are."
+explain_graph_title <- "What This Graph Represents"
 most_used_word_text <- "Candidates' Most Used Word"
 selector_title <- "Select Two Candidates"
 selector_title_vocabulary <- "General Analysis"
-explain_graph <- "This graph shows the proportion of relevant words for each candidate.\nBecause we use a logarithmic scale many dots seem closer than they really are.\nFor this reason, the intensity of the dot's color denotes how close both proportions are."
-explain_graph_title <- "What This Graph Represents"
 the_pvalue <- "p Value"
 title_tabs <- "United States Presidential Debates (2024)"
 title_section_01 <- "General Comparison"
 title_section_02 <- "Sentiment Analysis"
+
+
+#Tab2
 title_section_03 <- "Synthesis of the Vocabulary"
 title_section_04 <- "TF-IDF Analysis"
+explain_1_number_of_words <- "The numbers in each bar represent the total number of words used by each participant in the debates."
+explain_2_unique_words <- "The numbers in each bar represent the total number of unique words pronunced by each candidate. This means that if you use the word \'people\' 10 times in your discourse and \'atomic'\ just once, Unique Words will count each as one regardless their frequency."
+explain_3_vocabulary_diversity <- "Vocabulary Diversity is a rough measure of the proportion of unique words. It is obtained by simply dividing Unique Words between Total Words (UW/TW). The measure ranges between 1 (all the words were different) and 1/TW (the person repeated just one word)."
 
 
 # Variables ####
 # Selector Vocabulary tab
-vocabulary_selector <- c("Number of words", "Unique Words", "Vocabulary diversity")
+vocabulary_selector <- c("Number of Words", "Unique Words", "Vocabulary Diversity")
 

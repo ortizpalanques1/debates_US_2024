@@ -156,10 +156,21 @@ ui <- fluidPage(
         h2(title_section_03),
         column(
           2,
-          selectInput("vocabulary_analysis",
-                      "Select the Analysis",
-                      choices = vocabulary_selector,
-                      selected = NULL),
+          fluidRow(
+            selectInput("vocabulary_analysis",
+                        "Select the Synthesis",
+                        choices = vocabulary_selector,
+                        selected = NULL)
+          ),
+          fluidRow(
+            h4(
+              textOutput("title_explain_synthesis_vocabulary")
+            )
+          ),
+          fluidRow(
+            class = "explanation",
+            textOutput("explain_synthesis_vocabulary")
+          )
         ),
         column(
           8,
@@ -320,6 +331,29 @@ server <- function(input, output) {
       vocabulary_diversity_graph(vocabulary_diversity(word_counter_by_participant(debates_2024), number_of_unique_words_person_and_date(unique_words(debates_2024, all_participants))), person_colors)
     }
     analytical_graph
+  })
+  
+  output$title_explain_synthesis_vocabulary <- renderText({
+    X <- if(input$vocabulary_analysis == vocabulary_selector[1]){
+      vocabulary_selector[1]
+    } else if(input$vocabulary_analysis == vocabulary_selector[2]){
+      vocabulary_selector[2]
+    } else if(input$vocabulary_analysis == vocabulary_selector[3]){
+      vocabulary_selector[3]
+    }
+    X
+  })
+  
+  
+  output$explain_synthesis_vocabulary <- renderText({
+    X <- if(input$vocabulary_analysis == vocabulary_selector[1]){
+      explain_1_number_of_words
+    } else if(input$vocabulary_analysis == vocabulary_selector[2]){
+      explain_2_unique_words
+    } else if(input$vocabulary_analysis == vocabulary_selector[3]){
+      explain_3_vocabulary_diversity
+    }
+    X
   })
 }
 

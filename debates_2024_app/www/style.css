@@ -37,6 +37,13 @@ p{
   color: #B9D9EB;
 }
 
+.explanation{
+  background-color: #1E2952;
+  color: #B9D9EB;
+  font-size: 18px;
+  padding: 20px;
+}
+
 .minitext{
   color: #B9D9EB;
   font-size: 18px;
