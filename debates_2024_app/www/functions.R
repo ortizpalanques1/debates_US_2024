@@ -250,16 +250,31 @@ vocabulary_diversity_graph <- function(file, the_colors){
 # (author, name of the book, etc.). the file "debates_2024" for the present case.
 # 2. The grouping variable 
 word_counter_neat <- function(file, the_grouping_var){
-  #this_grouping_var <- paste0(deparse(substitute(the_processed_file)), "$", deparse(substitute(the_grouping_var)))
+  
+  this_grouping_var <- deparse(substitute(the_grouping_var))
+  
   the_processed_file <- file %>% 
     filter(!grepl("^\\(", transcript)) %>% 
     unnest_tokens(word, transcript) %>% 
     count(person, word, sort = TRUE)
-  total_words <- the_processed_file %>% 
-     group_by(deparse(substitute(the_grouping_var))) %>% 
-     summarize(total = sum(n))
   
-  return(the_processed_file)
+  total_words <- the_processed_file %>%
+    group_by(get(this_grouping_var)) %>%
+    summarize(total = sum(n)) 
+  
+  colnames(total_words) <- c(this_grouping_var, "total")
+   
+  document_words <- left_join(the_processed_file, total_words, by = this_grouping_var)
+  
+  return(document_words)
+}
+
+# TF*IDF Function
+tf_idf <- function(file){
+  colnames(file)[1] <- "X"
+  this_tf_idf <- file %>% 
+    bind_tf_idf(word, X, n)
+  return(this_tf_idf)
 }
 
 
