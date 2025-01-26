@@ -8,7 +8,7 @@ source("www/functions.R")
 # debates_2024_uw_clean_ss = All the words after stop_words
 # candidates_data
 # person_colors
-print(candidates_data)
+
 
 # Define UI for application that draws a histogram
 ui <- fluidPage(

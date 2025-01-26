@@ -245,6 +245,23 @@ vocabulary_diversity_graph <- function(file, the_colors){
   return(debates_2024_vocabulary_diversity_graph)
 }
 
+# Word Frequency
+# 1. The parameter for this function is a data frame containing: text and identifiers 
+# (author, name of the book, etc.). the file "debates_2024" for the present case.
+# 2. The grouping variable 
+word_counter_neat <- function(file, the_grouping_var){
+  #this_grouping_var <- paste0(deparse(substitute(the_processed_file)), "$", deparse(substitute(the_grouping_var)))
+  the_processed_file <- file %>% 
+    filter(!grepl("^\\(", transcript)) %>% 
+    unnest_tokens(word, transcript) %>% 
+    count(person, word, sort = TRUE)
+  total_words <- the_processed_file %>% 
+     group_by(deparse(substitute(the_grouping_var))) %>% 
+     summarize(total = sum(n))
+  
+  return(the_processed_file)
+}
+
 
 # Texts ####
 # Tab 1 and global texts
