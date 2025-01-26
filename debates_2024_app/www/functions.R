@@ -248,7 +248,7 @@ vocabulary_diversity_graph <- function(file, the_colors){
 # Word Frequency
 # 1. The parameter for this function is a data frame containing: text and identifiers 
 # (author, name of the book, etc.). the file "debates_2024" for the present case.
-# 2. The grouping variable 
+# 2. The grouping variable: person in the examples
 word_counter_neat <- function(file, the_grouping_var){
   
   this_grouping_var <- deparse(substitute(the_grouping_var))
@@ -270,12 +270,32 @@ word_counter_neat <- function(file, the_grouping_var){
 }
 
 # TF*IDF Function
-tf_idf <- function(file){
+# The parameter is the result of the function "word_counter_neat."
+# Example: tf_idf_table(word_counter_neat(debates_2024, person))
+tf_idf_table <- function(file){
   colnames(file)[1] <- "X"
   this_tf_idf <- file %>% 
-    bind_tf_idf(word, X, n)
+    bind_tf_idf(word, X, n) %>% 
+    arrange(desc(tf_idf))
   return(this_tf_idf)
 }
+
+# Graph TF*IDF
+# Example: tf_idf_gr(tf_idf_table(word_counter_neat(debates_2024, person)), person_colors)
+tf_idf_gr <- function(file, the_colors){
+  this_graph <- file %>%
+    mutate(word = fct_reorder(word, tf_idf))  %>% 
+    group_by(X) %>%
+    slice_max(tf_idf, n = 4) %>%
+    ungroup() %>%
+    ggplot(aes(tf_idf, word, fill = X)) +
+    geom_col(show.legend = FALSE) +
+    facet_wrap(~X, ncol = 2, scales = "free") +
+    scale_fill_manual(values = the_colors)+
+    labs(x = "tf-idf", y = NULL)
+  return(this_graph)
+}
+
 
 
 # Texts ####

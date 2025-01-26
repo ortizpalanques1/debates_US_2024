@@ -2,6 +2,7 @@
 # Libraries ####
 library(tidyverse)
 library(tidytext)
+library(forcats)
 source("scripts/clean_texts.R")
 source("scripts/word_count.R")
 data("stop_words")

@@ -2,6 +2,7 @@ library(shiny)
 library(tidyverse)
 library(tidyr)
 library(tidytext)
+library(forcats)
 load("data/data_debate_2024.RData")
 source("www/functions.R")
 # Files to retrive
