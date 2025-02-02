@@ -284,15 +284,34 @@ tf_idf_table <- function(file){
 # Example: tf_idf_gr(tf_idf_table(word_counter_neat(debates_2024, person)), person_colors)
 tf_idf_gr <- function(file, the_colors){
   this_graph <- file %>%
-    mutate(word = fct_reorder(word, tf_idf))  %>% 
+    #mutate(word = reorder_within(word, tf_idf, X))  %>% 
     group_by(X) %>%
     slice_max(tf_idf, n = 4) %>%
     ungroup() %>%
-    ggplot(aes(tf_idf, word, fill = X)) +
-    geom_col(show.legend = FALSE) +
-    facet_wrap(~X, ncol = 2, scales = "free") +
+    ggplot(aes(tf_idf, reorder_within(word, tf_idf, X), fill = X)) +
+    geom_col(show.legend = FALSE, width = 0.8, position = position_dodge(1.5)) +
+    facet_wrap(~X, ncol = 2, scales = "free_y") +
     scale_fill_manual(values = the_colors)+
-    labs(x = "tf-idf", y = NULL)
+    scale_y_reordered()+
+    labs(
+      title = "Most Relevant Words by Participant",
+      subtitle = "Four Highest tf-idf values",
+      x = "tf-idf", 
+      y = NULL
+    )+
+    theme(
+      axis.text = element_text(family =  "TT Times New Roman", face = "bold", color = "black"),
+      axis.text.x = element_text(size = 14),
+      axis.text.y = element_text(size = 16),
+      axis.ticks.y = element_line(color = "black"),
+      panel.background = element_blank(),
+      panel.grid = element_blank(),
+      plot.subtitle = element_text(size = 16, hjust = 0.5),
+      plot.title = element_text(family =  "TT Times New Roman", face = "bold", color = "black", size = 24, hjust = 0.5),
+      plot.title.position = "plot", 
+      strip.background = element_rect(fill = "#1E2952"),
+      strip.text = element_text(family =  "TT Times New Roman", face = "bold", color = "white", size = 14)
+    )
   return(this_graph)
 }
 
