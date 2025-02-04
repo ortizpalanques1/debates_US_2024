@@ -282,6 +282,7 @@ tf_idf_table <- function(file){
 
 # Graph TF*IDF
 # Example: tf_idf_gr(tf_idf_table(word_counter_neat(debates_2024, person)), person_colors)
+# Reference: https://juliasilge.github.io/tidytext/reference/reorder_within.html
 tf_idf_gr <- function(file, the_colors){
   this_graph <- file %>%
     #mutate(word = reorder_within(word, tf_idf, X))  %>% 
