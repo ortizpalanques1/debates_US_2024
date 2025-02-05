@@ -179,7 +179,14 @@ ui <- fluidPage(
         )
       ),
       fluidRow(
-        h2(title_section_04)
+        h2(title_section_04),
+        column(
+          2,
+        ),
+        column(
+          4,
+          plotOutput("tf_idf", width = "500px", height = "800px"),
+        )
       )
     )
   )
@@ -354,6 +361,11 @@ server <- function(input, output) {
     } else if(input$vocabulary_analysis == vocabulary_selector[3]){
       explain_3_vocabulary_diversity
     }
+    X
+  })
+  
+  output$tf_idf <- renderPlot({
+    X <- tf_idf_gr(tf_idf_table(word_counter_neat(debates_2024, person)), person_colors)
     X
   })
 }
