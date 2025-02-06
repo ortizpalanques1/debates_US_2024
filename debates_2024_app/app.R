@@ -186,6 +186,15 @@ ui <- fluidPage(
         column(
           4,
           plotOutput("tf_idf", width = "500px", height = "800px"),
+        ),
+        column(
+          2,
+          fluidRow(
+            h3(search_tf_idf)
+          ),
+          fluidRow(
+            uiOutput("search_it_idf_box")
+          )
         )
       )
     )
@@ -352,7 +361,8 @@ server <- function(input, output) {
     X
   })
   
-  
+  # TF-IDF
+  # General Table
   output$explain_synthesis_vocabulary <- renderText({
     X <- if(input$vocabulary_analysis == vocabulary_selector[1]){
       explain_1_number_of_words
@@ -367,6 +377,15 @@ server <- function(input, output) {
   output$tf_idf <- renderPlot({
     X <- tf_idf_gr(tf_idf_table(word_counter_neat(debates_2024, person)), person_colors)
     X
+  })
+  
+  #Search by Word
+  output$search_it_idf_box <- renderUI({
+    important_words <- unique(select(tf_idf_table(word_counter_neat(debates_2024, person)), word))
+    selectInput(inputId = "search_it_idf_box",
+                label = "Search", 
+                choices = important_words
+    )
   })
 }
 
