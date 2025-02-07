@@ -4,6 +4,7 @@ source("scripts/most_used_words.R")
 library(textdata)
 library(tidyverse)
 library(tidytext)
+library(SemNetCleaner)
 data("stop_words")
 
 # 3.1. Improve the stop words: no numbers, no personal pronouns, keep the verbs.

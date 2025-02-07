@@ -3,6 +3,7 @@ library(tidyverse)
 library(tidyr)
 library(tidytext)
 library(forcats)
+library(SemNetCleaner)
 load("data/data_debate_2024.RData")
 source("www/functions.R")
 # Files to retrive
