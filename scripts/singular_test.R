@@ -15,3 +15,7 @@ singular_test <- sapply(test, singularize)
 singular_plural <- data.frame("Original" = test, "Final" = singular_test)
 row.names(singular_plural) <- seq(1:length(singular_plural$Original))
 singular_plural$Difference <- ifelse(singular_plural$Original == singular_plural$Final, 0, 1)
+
+# False Positives ####
+false_positive <- singular_plural %>% 
+  filter(Difference == 1)
