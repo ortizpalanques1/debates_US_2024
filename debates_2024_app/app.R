@@ -4,6 +4,7 @@ library(tidyr)
 library(tidytext)
 library(forcats)
 library(SemNetCleaner)
+
 load("data/data_debate_2024.RData")
 source("www/functions.R")
 # Files to retrive
@@ -196,6 +197,10 @@ ui <- fluidPage(
           fluidRow(
             uiOutput("search_it_idf_box")
           )
+        ),
+        column(
+          4,
+          tableOutput("search_it_idf_table")
         )
       )
     )
@@ -380,7 +385,7 @@ server <- function(input, output) {
     X
   })
   
-  #Search by Word
+  # Search by Word
   output$search_it_idf_box <- renderUI({
     important_words <- unique(select(tf_idf_table(word_counter_neat(debates_2024, person)), word))
     selectInput(inputId = "search_it_idf_box",
@@ -388,6 +393,12 @@ server <- function(input, output) {
                 choices = important_words
     )
   })
+  
+  # Search by Word Table
+  output$search_it_idf_table <- renderTable({
+    search_by_word_table(tf_idf_table(word_counter_neat(debates_2024, person)), input$search_it_idf_box)
+  },
+  digits = 5)
 }
 
 # Run the application 

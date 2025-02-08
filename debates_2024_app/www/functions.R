@@ -256,6 +256,7 @@ word_counter_neat <- function(file, the_grouping_var){
   the_processed_file <- file %>% 
     filter(!grepl("^\\(", transcript)) %>% 
     unnest_tokens(word, transcript) %>% 
+    mutate(word = str_replace(word, "’", "'")) %>% 
     count(person, word, sort = TRUE)
   
   total_words <- the_processed_file %>%
@@ -316,6 +317,21 @@ tf_idf_gr <- function(file, the_colors){
   return(this_graph)
 }
 
+# Search by Word Table
+# Example: search_by_word_table(tf_idf_table(word_counter_neat(debates_2024, person)), selection)
+# Notice that the grouping variable was determined in the function tf_idf_table
+search_by_word_table <- function(file, selection){
+  this_table <- file %>% 
+    group_by(X) %>% 
+    mutate(rank = row_number()) %>% 
+    ungroup() %>% 
+    filter(word == selection) %>% 
+    select(X, rank, tf_idf)
+  colnames(this_table) <- c("Group", "Rank", "TF-IDF")
+  return(this_table)
+}
+
+
 
 
 # Texts ####
@@ -343,4 +359,3 @@ search_tf_idf <- "Search TF-IDF of a Word"
 # Variables ####
 # Selector Vocabulary tab
 vocabulary_selector <- c("Number of Words", "Unique Words", "Vocabulary Diversity")
-
