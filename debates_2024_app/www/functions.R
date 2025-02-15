@@ -354,7 +354,7 @@ title_section_04 <- "TF-IDF Analysis"
 explain_1_number_of_words <- "The numbers in each bar represent the total number of words used by each participant in the debates."
 explain_2_unique_words <- "The numbers in each bar represent the total number of unique words pronunced by each candidate. This means that if you use the word \'people\' 10 times in your discourse and \'atomic'\ just once, Unique Words will count each as one regardless their frequency."
 explain_3_vocabulary_diversity <- "Vocabulary Diversity is a rough measure of the proportion of unique words. It is obtained by simply dividing Unique Words between Total Words (UW/TW). The measure ranges between 1 (all the words were different) and 1/TW (the person repeated just one word)."
-explain_tf_idf <- HTML("<p>The importance of word inside a document depends on two things: 1. How frequent is its use inside that document, and 2. How particular is it in reference to the other documents of the corpus. Both questions are addressed by the TF-IDF value; where TF stands for <i>term frequency</i> and IDF for <i>inverse document frequency</i> <a href='https://en.wikipedia.org/wiki/Tf%E2%80%93idf'>Wikipedia</a>.</p>")
+explain_tf_idf <- HTML("<p>The importance of a word inside a document depends on two things: 1. How frequent is its use inside that document, and 2. How particular is it in reference to the other documents of the corpus. Both questions are addressed by the TF-IDF value; where TF stands for <i>term frequency</i> and IDF for <i>inverse document frequency</i> <a href='https://en.wikipedia.org/wiki/Tf%E2%80%93idf'>Wikipedia</a>.</p>")
 search_tf_idf <- "Search TF-IDF of a Word"
 search_tf_idf_table_1 <- "TF-IDF Values of the Word: "
 
