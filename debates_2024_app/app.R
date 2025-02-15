@@ -184,6 +184,7 @@ ui <- fluidPage(
         h2(title_section_04),
         column(
           2,
+          explain_tf_idf
         ),
         column(
           4,
