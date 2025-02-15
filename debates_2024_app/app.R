@@ -200,7 +200,13 @@ ui <- fluidPage(
         ),
         column(
           4,
-          tableOutput("search_it_idf_table")
+          fluidRow(
+            h3(textOutput("search_tf_idf_word"))
+          ),
+          fluidRow(
+            class = "table",
+            tableOutput("search_it_idf_table")
+          )
         )
       )
     )
@@ -390,7 +396,7 @@ server <- function(input, output) {
     important_words <- unique(select(tf_idf_table(word_counter_neat(debates_2024, person)), word))
     selectInput(inputId = "search_it_idf_box",
                 label = "Search", 
-                choices = important_words
+                choices = sort(important_words$word)
     )
   })
   
@@ -398,7 +404,25 @@ server <- function(input, output) {
   output$search_it_idf_table <- renderTable({
     search_by_word_table(tf_idf_table(word_counter_neat(debates_2024, person)), input$search_it_idf_box)
   },
-  digits = 5)
+  bordered = TRUE,
+  digits = 5,
+  hover = TRUE)
+  
+  # Title of the IF-IDF table
+  searched_word <- reactive({
+    input$search_it_idf_box
+  })
+  
+  observeEvent(
+    input$search_it_idf_box, 
+    {output$search_tf_idf_word <- renderText({
+      paste0(
+        search_tf_idf_table_1, 
+        str_to_title(searched_word())
+        )
+      })
+    })
+  
 }
 
 # Run the application 

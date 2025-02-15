@@ -16,6 +16,8 @@ h2{
 
 h3{
   font-size: 30px;
+  padding-left: 20px;
+  padding-right: 20px;
   text-align: center;
 }
 
@@ -56,6 +58,13 @@ p{
   font-style: italic;
   font-weight: bold;
   text-align: center;
+}
+
+.table{
+  color: black;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 50px;
 }
 
 .title{
