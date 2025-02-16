@@ -34,6 +34,13 @@ p{
 
 /* classes */
 
+.button{
+  background-color: #1E2952;
+  color:  #B9D9EB;
+  border-color: #B9D9EB;
+  font-weight: bold;
+}
+
 .column_selection{
   background-color: #1E2952;
   color: #B9D9EB;

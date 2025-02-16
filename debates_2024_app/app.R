@@ -117,7 +117,7 @@ ui <- fluidPage(
                     h4(textOutput("name_proportion_x"))
                   ),
                   fluidRow(
-                    class = "minitext",
+                    class = "table",
                     tableOutput("proportion_x")
                   )
                 ),
@@ -127,7 +127,7 @@ ui <- fluidPage(
                     h4(textOutput("name_proportion_y"))
                   ),
                   fluidRow(
-                    class = "minitext",
+                    class = "table",
                     tableOutput("proportion_y")
                   )
                 )
@@ -184,11 +184,28 @@ ui <- fluidPage(
         h2(title_section_04),
         column(
           2,
-          explain_tf_idf
+          fluidRow(
+            h3(tf_idf_title)
+          ),
+          fluidRow(
+            class = "explanation",
+            explain_tf_idf
+          ),
+          fluidRow(
+            column(
+              12,
+              align = "center",
+              downloadButton(
+                "download_graph_tf_idf",
+                label = "Download this Graph",
+                class = "button"
+            )
+          )
+         )
         ),
         column(
           4,
-          plotOutput("tf_idf", width = "500px", height = "800px"),
+          plotOutput("tf_idf", width = "500px", height = "800px")
         ),
         column(
           2,
@@ -197,6 +214,17 @@ ui <- fluidPage(
           ),
           fluidRow(
             uiOutput("search_it_idf_box")
+          ),
+          fluidRow(
+            column(
+              12,
+              align = "center",
+              downloadButton(
+                "download_table_tf_idf",
+                label = "Download this Table",
+                class = "button"
+              )
+            )
           )
         ),
         column(
@@ -332,12 +360,20 @@ server <- function(input, output) {
   output$proportion_x <- renderTable({
     sentiment_x <- sentiment_total(input$candidate_1, debates_2024_uw_clean_nss, bing_sentiment)
     sentiment_x
-  })
+  },
+  bordered = TRUE,
+  digits = 5,
+  hover = TRUE
+  )
   
   output$proportion_y <- renderTable({
     sentiment_y <- sentiment_total(input$candidate_2, debates_2024_uw_clean_nss, bing_sentiment)
     sentiment_y
-  })
+  },
+  bordered = TRUE,
+  digits = 5,
+  hover = TRUE
+  )
   
   #Sentiment Graph
   output$sentiment_graph_x <- renderPlot({
@@ -422,7 +458,33 @@ server <- function(input, output) {
         str_to_title(searched_word())
         )
       })
-    })
+  })
+  
+  output$download_graph_tf_idf <- downloadHandler(
+    filename <- function(){
+      paste("tf_idf_graph", Sys.Date(), ".png", sep = "")
+    },
+    content = function(con){
+      ggsave(
+        con,
+        plot = tf_idf_gr(tf_idf_table(word_counter_neat(debates_2024, person)), person_colors),
+        device = "png",
+        scale = 1
+      )
+    }
+  )
+  
+  output$download_table_tf_idf <- downloadHandler(
+    filename <- function(){
+      paste("tf_idf_table", Sys.Date(),"_", input$search_it_idf_box, ".csv", sep = "")
+    },
+    content = function(con){
+      write.csv(
+        search_by_word_table(tf_idf_table(word_counter_neat(debates_2024, person)),  input$search_it_idf_box),
+        con
+      )
+    }
+  )
   
 }
 
