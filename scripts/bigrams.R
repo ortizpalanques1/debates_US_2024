@@ -2,7 +2,7 @@
 library(tidyverse)
 library(tidytext)
 
-# Obtaining sentences 
+# Obtaining sentences ####
 
 sentences_debate <- debates_2024 %>%
   unnest_tokens(
