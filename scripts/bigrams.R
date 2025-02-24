@@ -56,3 +56,9 @@ for(i in 1:length(sentences_debate$N_words)){
     those_sentiments[[y]] <- auxiliar_list
   }
 }
+
+# Test: Creating string to assess ####
+the_master_filter <- 4
+the_filter <- paste0("dplyr::filter(mtcars, carb ==  ", the_master_filter, ")")
+
+test_filters <-   eval(parse(text = paste0(the_filter)))
