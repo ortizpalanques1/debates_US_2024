@@ -34,7 +34,25 @@ sentences_debate <- debates_2024 %>%
   #   verifico_Sen_Cor = sum(Sen_Cor)
   # ) 
 
+
+# List of Rows with Sentiments ####
+with_sentiment <- matrix(ncol = 1, nrow = length(sentences_debate$N_words))
+these_sentiments <- list()
+those_sentiments <- list()
+y = 0
 for(i in 1:length(sentences_debate$N_words)){
-  this_sentence <- c(unlist(str_split(sentences_debate$sentence[362], "\\s+")))
-  verifico <- this_sentence[this_sentence %in% bing_sentiment$word]
+  this_sentence <- c(unlist(str_split(sentences_debate$sentence[i], "\\s+")))
+  verifico <- ifelse(length(this_sentence[this_sentence %in% bing_sentiment$word]) > 0, TRUE, FALSE)
+  verifico_string <- this_sentence[this_sentence %in% bing_sentiment$word]
+  print(verifico)
+  with_sentiment[i,1] <- verifico
+  these_sentiments[[i]] <- verifico_string
+  
+  auxiliar_list <- list()
+  if(length(this_sentence[this_sentence %in% bing_sentiment$word]) > 0){
+    y = y + 1
+    auxiliar_list[[1]] <- sentences_debate$line_number[i]
+    auxiliar_list[[2]] <- this_sentence[this_sentence %in% bing_sentiment$word]
+    those_sentiments[[y]] <- auxiliar_list
+  }
 }
