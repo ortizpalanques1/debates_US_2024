@@ -66,7 +66,9 @@ for(i in 1:length(sentences_debate$N_words)){
 # Extracting the Row Numbers for the filter ####
 extraction_test <- sapply(those_sentiments,"[[",1)
 sentence_debate_with_sentiment <- sentences_debate %>% 
-  filter(sentence_ID %in% extraction_test)
+  filter(sentence_ID %in% extraction_test) 
+
+
    
 # Test: Creating string to assess ####
 the_master_filter <- 4
@@ -77,3 +79,6 @@ the_filter_02 <- paste0("mtcars[!(mtcars$carb %in% c(", paste(the_final_master_f
 
 test_filters <-   eval(parse(text = paste0(the_filter)))
 test_filters <-   eval(parse(text = paste0(the_filter_02)))
+
+## Quitar ####
+# "vice", "trump"
