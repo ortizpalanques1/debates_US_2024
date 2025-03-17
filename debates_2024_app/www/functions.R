@@ -359,6 +359,10 @@ tf_idf_title <- "TF-IDF"
 title_section_03 <- "Synthesis of the Vocabulary"
 title_section_04 <- "TF-IDF Analysis"
 
+#Tab3
+sentiment_dictionaries <- "Sentiment-Dictionaries"
+title_section_05 <- "Sentiment Analysis by Sentence"
+
 # Variables ####
 # Selector Vocabulary tab
 vocabulary_selector <- c("Number of Words", "Unique Words", "Vocabulary Diversity")

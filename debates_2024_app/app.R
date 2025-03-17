@@ -205,7 +205,7 @@ ui <- fluidPage(
         ),
         column(
           4,
-          plotOutput("tf_idf", width = "500px", height = "800px")
+          plotOutput("tf_idf", width = "480px", height = "853px")
         ),
         column(
           2,
@@ -236,6 +236,28 @@ ui <- fluidPage(
             class = "table",
             tableOutput("search_it_idf_table")
           )
+        )
+      )
+    ),
+    tabPanel("Sentiment",
+      fluidRow(
+        h1(title_tabs)
+      ),
+      fluidRow(
+        h2(title_section_05)
+      ),
+      fluidRow(
+        column(
+          2,
+          fluidRow(
+            h3(sentiment_dictionaries)
+          )
+        ),
+        column(
+          8,
+        ),
+        column(
+          2,
         )
       )
     )
