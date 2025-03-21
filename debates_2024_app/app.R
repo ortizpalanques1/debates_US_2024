@@ -4,9 +4,21 @@ library(tidyr)
 library(tidytext)
 library(forcats)
 library(SemNetCleaner)
+library(RMariaDB)
+library(odbc)
+library(DBI)
+
 
 load("data/data_debate_2024.RData")
 source("www/functions.R")
+con <- dbConnect(
+  drv = RMariaDB::MariaDB(), 
+  dbname = "sentiments_dictionaries",
+  username = "root",
+  password = "Ciencia54", 
+  host = "localhost", 
+  port = 3306
+)
 # Files to retrive
 # debates_2024_uw_clean_ss = All the words after stop_words
 # candidates_data
@@ -251,6 +263,16 @@ ui <- fluidPage(
           2,
           fluidRow(
             h3(sentiment_dictionaries)
+          ),
+          fluidRow(
+            column(
+              12,
+              selectInput(
+                "dictionaries", 
+                "Dictionaries", 
+                choices = vector_query("meta_data", "tables_dictio", "include_sentiments", "TRUE")
+              )
+            )
           )
         ),
         column(
@@ -507,6 +529,8 @@ server <- function(input, output) {
       )
     }
   )
+  
+  # print(dbFetch(dbSendQuery(con, paste("SELECT * FROM ", verba))))
   
 }
 

@@ -1,0 +1,5 @@
+md_id,tables,description,language,type,include_sentimens
+1,bing,"Sentiment lexicon that classifies words as Negative or positive. Source: https://www.cs.uic.edu/~liub/FBS/sentiment-analysis.html. Details: This lexicon was first published in: Minqing Hu and Bing Liu, ``Mining and summarizing customer reviews.``, Proceedings of the ACM SIGKDD International Conference on Knowledge Discovery & Data Mining (KDD-2004), Seattle, Washington, USA, Aug 22-25, 2004. Words with non-ASCII characters were removed.",English,Sentiment,TRUE
+2,english_negations,List of English words that denotes the absence of an attribute,English,Negation,FALSE
+3,stopwords,List of words that are considered low value in the extraction of meaning from texts,English,Stopword,FALSE
+4,stop_words_special,Experimental list of stop words.,English,Stopword,FALSE

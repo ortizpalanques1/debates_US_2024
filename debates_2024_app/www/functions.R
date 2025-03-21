@@ -331,6 +331,29 @@ search_by_word_table <- function(file, selection){
   return(this_table)
 }
 
+# Return Vector from SQL
+# table_name = character variable with the name of the table
+# name_column = character value with the name of the column that contains the retrieved values
+# where_column = character variable with the name of the column inside the table
+# the_value = character variable. It contents the value to filter the column
+# SELECT tables_dictio FROM meta_data WHERE include_sentiments = 'TRUE';
+# table_name <- "meta_data"
+# name_column <- "tables_dictio"
+# where_column <- "include_sentiments"
+# the_value <- "TRUE"
+
+vector_query <- function(table_name, name_column, where_column, the_value){
+  the_query <- paste0("SELECT ", name_column, 
+                      " FROM ", table_name, " WHERE ", where_column, " = '", the_value, "';"
+                      )
+  this_vector <- dbSendQuery(con, the_query)
+  working_data <- dbFetch(this_vector)
+  working_data <- as.vector(working_data$tables_dictio)
+  dbClearResult(this_vector)
+  return(working_data)
+}
+
+
 
 
 
@@ -366,3 +389,6 @@ title_section_05 <- "Sentiment Analysis by Sentence"
 # Variables ####
 # Selector Vocabulary tab
 vocabulary_selector <- c("Number of Words", "Unique Words", "Vocabulary Diversity")
+
+# SQL Variables
+verba <- "bing"

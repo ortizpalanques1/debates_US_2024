@@ -67,6 +67,12 @@ p{
   text-align: center;
 }
 
+.selector_pad{
+  color: black;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
 .table{
   color: black;
   margin-left: auto;
