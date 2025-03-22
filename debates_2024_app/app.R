@@ -7,18 +7,11 @@ library(SemNetCleaner)
 library(RMariaDB)
 library(odbc)
 library(DBI)
+library(bslib)
 
 
 load("data/data_debate_2024.RData")
 source("www/functions.R")
-con <- dbConnect(
-  drv = RMariaDB::MariaDB(), 
-  dbname = "sentiments_dictionaries",
-  username = "root",
-  password = "Ciencia54", 
-  host = "localhost", 
-  port = 3306
-)
 # Files to retrive
 # debates_2024_uw_clean_ss = All the words after stop_words
 # candidates_data
@@ -211,9 +204,9 @@ ui <- fluidPage(
                 "download_graph_tf_idf",
                 label = "Download this Graph",
                 class = "button"
+              )
             )
           )
-         )
         ),
         column(
           4,
@@ -271,6 +264,10 @@ ui <- fluidPage(
                 "dictionaries", 
                 "Dictionaries", 
                 choices = vector_query("meta_data", "tables_dictio", "include_sentiments", "TRUE")
+              ),
+              card(
+                card_header(textOutput("title_dictionary")),
+                card_body(textOutput("dictionary_description"))
               )
             )
           )
@@ -530,7 +527,23 @@ server <- function(input, output) {
     }
   )
   
-  # print(dbFetch(dbSendQuery(con, paste("SELECT * FROM ", verba))))
+  # Third tab
+  # working_dictionary <- reactive({
+  #   vector_query(input$dictionaries)
+  # })
+  
+  output$title_dictionary <- renderText({
+    cap_letter(input$dictionaries)
+  })
+  
+  dictionary_description <- reactive({
+    vector_query("meta_data", "description", "tables_dictio", input$dictionaries)
+  })
+  
+  observeEvent(dictionary_description(), {
+     descriptio <- dictionary_description()
+     output$dictionary_description <- renderText({descriptio})
+  })
   
 }
 

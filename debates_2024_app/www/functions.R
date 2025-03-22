@@ -1,5 +1,15 @@
 # Functions ####
 
+# Connection
+con <- dbConnect(
+  drv = RMariaDB::MariaDB(), 
+  dbname = "sentiments_dictionaries",
+  username = "root",
+  password = "Ciencia54", 
+  host = "localhost", 
+  port = 3306
+)
+
 # p Value
 pvalue <- function(x){
   tryCatch(
@@ -348,11 +358,22 @@ vector_query <- function(table_name, name_column, where_column, the_value){
                       )
   this_vector <- dbSendQuery(con, the_query)
   working_data <- dbFetch(this_vector)
-  working_data <- as.vector(working_data$tables_dictio)
+  working_data <- as.vector(working_data[,1])
   dbClearResult(this_vector)
   return(working_data)
 }
 
+df_query <- function(table_name){
+  the_query <- paste0("SELECT * FROM ", table_name, ";")
+  this_df <- dbSendQuery(con, the_query)
+  working_data <- dbFetch(this_df)
+  dbClearResult(this_df)
+  return(working_data)
+}
+
+cap_letter <- function(text){
+  str_to_title(str_replace_all(text, "_", " "))
+}
 
 
 
@@ -391,4 +412,4 @@ title_section_05 <- "Sentiment Analysis by Sentence"
 vocabulary_selector <- c("Number of Words", "Unique Words", "Vocabulary Diversity")
 
 # SQL Variables
-verba <- "bing"
+
