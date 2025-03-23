@@ -5,6 +5,7 @@ library(tidytext)
 
 # Files ####
 negative_words <- read.csv("texts/english_negations.txt", header = TRUE)
+bing_sentiment <- get_sentiments("bing")
 
 # Obtaining sentences ####
 
@@ -22,35 +23,23 @@ sentences_debate <- debates_2024 %>%
     T_words = sum(N_words),
     Sen_Cor = round((N_words/T_words), 5)
   ) %>% 
-  group_by(person) %>% 
+  group_by(person) %>% # This name must be changed with a parameter for the function
   mutate(
     N_document = sum(N_words),
     Sen_Doc = round((N_words/N_document), 5)
-    #,
-    #verifico = sum(Sen_Doc)
   ) %>% 
   ungroup() %>%
   mutate(
     sentimiento = NA,
     sentence_ID = row_number()
   )
-  # mutate(
-  #   verifico_Sen_Cor = sum(Sen_Cor)
-  # ) 
 
 
 # List of Rows with Sentiments ####
-with_sentiment <- matrix(ncol = 1, nrow = length(sentences_debate$N_words))
-these_sentiments <- list()
 those_sentiments <- list()
 y = 0
 for(i in 1:length(sentences_debate$N_words)){
   this_sentence <- c(unlist(str_split(sentences_debate$sentence[i], "\\s+")))
-  # verifico <- ifelse(length(this_sentence[this_sentence %in% bing_sentiment$word]) > 0, TRUE, FALSE)
-  # verifico_string <- this_sentence[this_sentence %in% bing_sentiment$word]
-  # print(verifico)
-  # with_sentiment[i,1] <- verifico
-  # these_sentiments[[i]] <- verifico_string
   
   auxiliar_list <- list()
   if(length(this_sentence[this_sentence %in% bing_sentiment$word]) > 0){
@@ -63,13 +52,29 @@ for(i in 1:length(sentences_debate$N_words)){
   }
 }
 
+sentiments_table <- data.frame(
+  "sentence_id" = sapply(those_sentiments,"[[",1),
+  "Negation" = sapply(those_sentiments,"[[",3)
+)
+
 # Extracting the Row Numbers for the filter ####
-extraction_test <- sapply(those_sentiments,"[[",1)
-sentence_debate_with_sentiment <- sentences_debate %>% 
-  filter(sentence_ID %in% extraction_test) 
+# Sentiment
+# extraction_test <- sapply(those_sentiments,"[[",1)
+# sentence_debate_with_sentiment <- sentences_debate %>% 
+#   filter(sentence_ID %in% extraction_test) 
+# 
+# # Negative words
+# extract_negative_sentiment <- NULL
+# for(l in 1:length(those_sentiments)){
+#   if(those_sentiments[[l]][[3]] == TRUE){
+#     the_negation <- those_sentiments[[l]][[1]]
+#     extract_negative_sentiment <- c(extract_negative_sentiment, the_negation)
+#   }
+# }
 
+sentence_debate_with_sentiment <- sentence_debate_with_sentiment %>% 
+  mutate(Negative = ifelse(sentence_debate_with_sentiment$sentence_ID %in% extract_negative_sentiment, TRUE, FALSE))
 
-   
 # Test: Creating string to assess ####
 the_master_filter <- 4
 the_master_filter_02 <- 8
