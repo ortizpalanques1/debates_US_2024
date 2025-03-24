@@ -57,6 +57,34 @@ sentiments_table <- data.frame(
   "Negation" = sapply(those_sentiments,"[[",3)
 )
 
+evaluador_palabras <- function(the_list, the_position, the_negative_position, the_dictionary){
+  # 1. the_list = character (quoted) input with the name of the list.
+  # 2. the_position = numeric input, element of the list that contains the words
+  # 3. the_negative_position = numeric input, element of the list that marks the existence of a negation.
+  #    the pointed vector contains only TRUE or FALSE.
+  # 4. the_dictionary = data_frame with the sentiments: 
+  #     check the column with words must have the name "word" and the column with sentiment, the
+  #     name "sentiment"
+  this_list <- get(the_list)[[the_position]]
+  this_negative <- get(the_list)[[the_negative_position]]
+  this_dictionary <- the_dictionary
+  partial_evaluations <- ifelse(bing_sentiment$sentiment[bing_sentiment$word == this_list]=="positive",1,0)
+  veredict <- if(length(unique(partial_evaluations)) > 1){
+    "indecisive"
+  }else if(unique(partial_evaluations) == 1 & this_negative == FALSE){
+    "likely positive"
+  }else if(unique(partial_evaluations) == 1 & this_negative == TRUE){
+    "likely negative"
+  }else if(unique(partial_evaluations) == 0 & this_negative == TRUE){
+    "likely positive"
+  }else{
+    "likely negative"
+  }
+  return(veredict)
+}
+
+evaluador_palabras("auxiliar_list", 2, 3, bing_sentiment)
+
 # Extracting the Row Numbers for the filter ####
 # Sentiment
 # extraction_test <- sapply(those_sentiments,"[[",1)
