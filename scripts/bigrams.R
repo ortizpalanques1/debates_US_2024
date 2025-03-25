@@ -39,9 +39,35 @@ sentences_corpus <- function(this_corpus){
     )
 }
 
-# Test
-sentences_corpus(debates_2024)
-by_sentence_df <- sentences_corpus(debates_2024)  
+
+# Assessment of the sentence
+# This function runs inside 'collect_sentiments' (next function)
+evaluador_palabras <- function(the_list, the_position, the_negative_position, the_dictionary){
+  # 1. the_list = character (quoted) input with the name of the list.
+  # 2. the_position = numeric input, element of the list that contains the words
+  # 3. the_negative_position = numeric input, element of the list that marks the existence of a negation.
+  #    the pointed vector contains only TRUE or FALSE.
+  # 4. the_dictionary = data_frame with the sentiments: 
+  #     check the column with words must have the name "word" and the column with sentiment, the
+  #     name "sentiment"
+  this_list <- get(the_list)[[the_position]]
+  this_negative <- get(the_list)[[the_negative_position]]
+  partial_evaluations <- ifelse(this_list %in% the_dictionary$word[the_dictionary$sentiment == "positive"],1,0)
+  #print(paste0("list: ", this_list, "Negative: ", this_negative, "Result: ", partial_evaluations))
+  veredict <- if(length(unique(partial_evaluations)) > 1){
+    "indecisive"
+  }else if(unique(partial_evaluations) == 1 & this_negative == FALSE){
+    "likely positive"
+  }else if(unique(partial_evaluations) == 1 & this_negative == TRUE){
+    "likely negative"
+  }else if(unique(partial_evaluations) == 0 & this_negative == TRUE){
+    "likely positive"
+  }else{
+    "likely negative"
+  }
+  return(veredict)
+}
+
 
 # List of Rows with Sentiments ####
 # Prerequisites
@@ -72,44 +98,25 @@ collect_sentiments <- function(by_sentence, this_dictionary){
   return(those_sentiments_beta)
 }
 
-collected_sentiments <- collect_sentiments(by_sentence_df, bing_sentiment) 
+
+# Running the functions ####
+collected_sentiments <- collect_sentiments(sentences_corpus(debates_2024), bing_sentiment) 
 collected_sentiments_df <- tibble(
-  "sentence_id" = sapply(collected_sentiments,"[[",1),
+  "sentence_ID" = sapply(collected_sentiments,"[[",1),
   "Negation" = sapply(collected_sentiments,"[[",3), 
   "Assessment" = sapply(collected_sentiments,"[[",5)
 )  
 
+collected_sentiments_final <- left_join(collected_sentiments_df, by_sentence_df, by = "sentence_ID") %>% 
+  select(sentence_ID, person, sentence, Assessment, Negation, Sen_Cor, Sen_Doc)
 
-
-evaluador_palabras <- function(the_list, the_position, the_negative_position, the_dictionary){
-  # 1. the_list = character (quoted) input with the name of the list.
-  # 2. the_position = numeric input, element of the list that contains the words
-  # 3. the_negative_position = numeric input, element of the list that marks the existence of a negation.
-  #    the pointed vector contains only TRUE or FALSE.
-  # 4. the_dictionary = data_frame with the sentiments: 
-  #     check the column with words must have the name "word" and the column with sentiment, the
-  #     name "sentiment"
-  this_list <- get(the_list)[[the_position]]
-  this_negative <- get(the_list)[[the_negative_position]]
-  partial_evaluations <- ifelse(this_list %in% the_dictionary$word[the_dictionary$sentiment == "positive"],1,0)
-  #print(paste0("list: ", this_list, "Negative: ", this_negative, "Result: ", partial_evaluations))
-  veredict <- if(length(unique(partial_evaluations)) > 1){
-    "indecisive"
-  }else if(unique(partial_evaluations) == 1 & this_negative == FALSE){
-    "likely positive"
-  }else if(unique(partial_evaluations) == 1 & this_negative == TRUE){
-    "likely negative"
-  }else if(unique(partial_evaluations) == 0 & this_negative == TRUE){
-    "likely positive"
-  }else{
-    "likely negative"
-  }
-  return(veredict)
-}
+# Test: failed and successful ####
+# Run "sentences_corpus" as:
+#by_sentence_df <- sentences_corpus(debates_2024)  
 
 #evaluador_palabras("auxiliar_list", 2, 3, bing_sentiment)
 
-# Extracting the Row Numbers for the filter ####
+# Extracting the Row Numbers for the filter ====
 # Sentiment
 # extraction_test <- sapply(those_sentiments,"[[",1)
 # sentence_debate_with_sentiment <- sentences_debate %>% 
@@ -128,11 +135,11 @@ evaluador_palabras <- function(the_list, the_position, the_negative_position, th
 #   mutate(Negative = ifelse(sentence_debate_with_sentiment$sentence_ID %in% extract_negative_sentiment, TRUE, FALSE))
 
 # Test: Creating string to assess ####
-the_master_filter <- 4
-the_master_filter_02 <- 8
-the_final_master_filter <- c(the_master_filter, the_master_filter_02)
-the_filter <- paste0("dplyr::filter(mtcars, carb !=  ", the_master_filter, ")")
-the_filter_02 <- paste0("mtcars[!(mtcars$carb %in% c(", paste(the_final_master_filter, collapse = ", "), ")),]")
+# the_master_filter <- 4
+# the_master_filter_02 <- 8
+# the_final_master_filter <- c(the_master_filter, the_master_filter_02)
+# the_filter <- paste0("dplyr::filter(mtcars, carb !=  ", the_master_filter, ")")
+# the_filter_02 <- paste0("mtcars[!(mtcars$carb %in% c(", paste(the_final_master_filter, collapse = ", "), ")),]")
 
 # test_filters <-   eval(parse(text = paste0(the_filter)))
 # test_filters <-   eval(parse(text = paste0(the_filter_02)))
