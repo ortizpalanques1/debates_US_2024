@@ -76,6 +76,7 @@ evaluador_palabras <- function(the_list, the_position, the_negative_position, th
 #    called 'word'
 # 3. The negative words list is constant
 collect_sentiments <- function(by_sentence, this_dictionary){
+  
   those_sentiments_beta <- list()
   y = 0
   for(i in 1:nrow(by_sentence)){
@@ -95,19 +96,18 @@ collect_sentiments <- function(by_sentence, this_dictionary){
       those_sentiments_beta[[y]] <- auxiliar_list
     }
   }
-  return(those_sentiments_beta)
+  collected_sentiments_df <- tibble(
+    "sentence_ID" = sapply(those_sentiments_beta,"[[",1),
+    "Negation" = sapply(those_sentiments_beta,"[[",3), 
+    "Assessment" = sapply(those_sentiments_beta,"[[",5)
+  ) 
+  return(collected_sentiments_df)
 }
 
 
 # Running the functions ####
 collected_sentiments <- collect_sentiments(sentences_corpus(debates_2024), bing_sentiment) 
-collected_sentiments_df <- tibble(
-  "sentence_ID" = sapply(collected_sentiments,"[[",1),
-  "Negation" = sapply(collected_sentiments,"[[",3), 
-  "Assessment" = sapply(collected_sentiments,"[[",5)
-)  
-
-collected_sentiments_final <- left_join(collected_sentiments_df, by_sentence_df, by = "sentence_ID") %>% 
+collected_sentiments_final <- left_join(collected_sentiments, by_sentence_df, by = "sentence_ID") %>% 
   select(sentence_ID, person, sentence, Assessment, Negation, Sen_Cor, Sen_Doc)
 
 # Test: failed and successful ####
@@ -147,8 +147,5 @@ collected_sentiments_final <- left_join(collected_sentiments_df, by_sentence_df,
 # 
 # test_vector <- c("welcome", "greed")
 # partial_evaluations <- ifelse(test_vector %in% bing_sentiment$word[bing_sentiment$sentiment == "positive"],1,0)
-
-
-
-test_numeric <- c(5,4,6,3)
-partial_evaluations <- ifelse(test_numeric > 4 ,1,0)
+# test_numeric <- c(5,4,6,3)
+# partial_evaluations <- ifelse(test_numeric > 4 ,1,0)
