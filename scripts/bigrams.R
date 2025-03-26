@@ -75,8 +75,8 @@ evaluador_palabras <- function(the_list, the_position, the_negative_position, th
 # 2. The column for the words that are assessed in the sentiment dictionary must be
 #    called 'word'
 # 3. The negative words list is constant
-collect_sentiments <- function(by_sentence, this_dictionary){
-  
+collect_sentiments <- function(corpus, this_dictionary){
+  by_sentence <- sentences_corpus(corpus)
   those_sentiments_beta <- list()
   y = 0
   for(i in 1:nrow(by_sentence)){
@@ -87,10 +87,8 @@ collect_sentiments <- function(by_sentence, this_dictionary){
       y = y + 1
       auxiliar_list[[1]] <- by_sentence$sentence_ID[i]
       auxiliar_list[[2]] <- this_sentence[this_sentence %in% this_dictionary$word]
-      print(auxiliar_list[[2]])
       auxiliar_list[[3]] <- ifelse(length(this_sentence[this_sentence %in% negative_words$word]) > 0, TRUE, FALSE)
       auxiliar_list[[4]] <- this_sentence[this_sentence %in% negative_words$word]
-      print(auxiliar_list)
       auxiliar_list_beta <<- auxiliar_list
       auxiliar_list[[5]] <- evaluador_palabras("auxiliar_list_beta", 2, 3, bing_sentiment)
       those_sentiments_beta[[y]] <- auxiliar_list
@@ -101,14 +99,14 @@ collect_sentiments <- function(by_sentence, this_dictionary){
     "Negation" = sapply(those_sentiments_beta,"[[",3), 
     "Assessment" = sapply(those_sentiments_beta,"[[",5)
   ) 
+  collected_sentiments_df <- left_join(collected_sentiments_df, by_sentence, by = "sentence_ID") %>% 
+    select(sentence_ID, person, sentence, Assessment, Negation, Sen_Cor, Sen_Doc)
   return(collected_sentiments_df)
 }
 
 
 # Running the functions ####
-collected_sentiments <- collect_sentiments(sentences_corpus(debates_2024), bing_sentiment) 
-collected_sentiments_final <- left_join(collected_sentiments, by_sentence_df, by = "sentence_ID") %>% 
-  select(sentence_ID, person, sentence, Assessment, Negation, Sen_Cor, Sen_Doc)
+collected_sentiments <- collect_sentiments(debates_2024, bing_sentiment) 
 
 # Test: failed and successful ####
 # Run "sentences_corpus" as:
