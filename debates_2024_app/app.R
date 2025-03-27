@@ -274,6 +274,7 @@ ui <- fluidPage(
         ),
         column(
           8,
+          DT::dataTableOutput("sentimental_table")
         ),
         column(
           2,
@@ -544,6 +545,13 @@ server <- function(input, output) {
      descriptio <- dictionary_description()
      output$dictionary_description <- renderText({descriptio})
   })
+  
+  selected_sentiments <- reactive({
+    df_query(input$dictionaries)
+  })
+  
+  output$sentimental_table <- DT::renderDataTable(collected_sentiments <- collect_sentiments(debates_2024, selected_sentiments()))
+  
   
 }
 
