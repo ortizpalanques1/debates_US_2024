@@ -274,7 +274,10 @@ ui <- fluidPage(
         ),
         column(
           8,
-          DT::dataTableOutput("sentimental_table")
+          class = "selector_pad",
+          DT::dataTableOutput(
+            "sentimental_table"
+          )
         ),
         column(
           2,
@@ -284,7 +287,7 @@ ui <- fluidPage(
   )
 )
 
-# Define server logic required to draw a histogram
+# Define server 
 server <- function(input, output) {
   
   # TAB 1 #
