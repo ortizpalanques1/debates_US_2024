@@ -12,6 +12,7 @@ library(bslib)
 
 load("data/data_debate_2024.RData")
 source("www/functions.R")
+negative_words <- df_query("english_negations")
 # Files to retrive
 # debates_2024_uw_clean_ss = All the words after stop_words
 # candidates_data
@@ -266,6 +267,7 @@ ui <- fluidPage(
                 choices = vector_query("meta_data", "tables_dictio", "include_sentiments", "TRUE")
               ),
               card(
+                max_height = 250,
                 card_header(textOutput("title_dictionary")),
                 card_body(textOutput("dictionary_description"))
               )
@@ -553,7 +555,8 @@ server <- function(input, output) {
     df_query(input$dictionaries)
   })
   
-  output$sentimental_table <- DT::renderDataTable(collected_sentiments <- collect_sentiments(debates_2024, selected_sentiments()))
+  
+  output$sentimental_table <- DT::renderDataTable(collected_sentiments <- collect_sentiments(debates_2024, selected_sentiments(), negative_words))
   
   
 }

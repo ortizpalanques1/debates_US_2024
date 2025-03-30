@@ -443,7 +443,7 @@ evaluador_palabras <- function(the_list, the_position, the_negative_position, th
 # 2. The column for the words that are assessed in the sentiment dictionary must be
 #    called 'word'
 # 3. The negative words list is constant
-collect_sentiments <- function(corpus, this_dictionary){
+collect_sentiments <- function(corpus, this_dictionary, negations){
   by_sentence <- sentences_corpus(corpus)
   those_sentiments_beta <- list()
   y = 0
@@ -455,10 +455,10 @@ collect_sentiments <- function(corpus, this_dictionary){
       y = y + 1
       auxiliar_list[[1]] <- by_sentence$sentence_ID[i]
       auxiliar_list[[2]] <- this_sentence[this_sentence %in% this_dictionary$word]
-      auxiliar_list[[3]] <- ifelse(length(this_sentence[this_sentence %in% negative_words$word]) > 0, TRUE, FALSE)
-      auxiliar_list[[4]] <- this_sentence[this_sentence %in% negative_words$word]
+      auxiliar_list[[3]] <- ifelse(length(this_sentence[this_sentence %in% negations$word]) > 0, TRUE, FALSE)
+      auxiliar_list[[4]] <- this_sentence[this_sentence %in% negations$word]
       auxiliar_list_beta <<- auxiliar_list
-      auxiliar_list[[5]] <- evaluador_palabras("auxiliar_list_beta", 2, 3, bing_sentiment)
+      auxiliar_list[[5]] <- evaluador_palabras("auxiliar_list_beta", 2, 3, this_dictionary)
       those_sentiments_beta[[y]] <- auxiliar_list
     }
   }

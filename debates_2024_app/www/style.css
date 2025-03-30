@@ -68,7 +68,8 @@ p{
 }
 
 .selector_pad{
-  background-color: yellow;
+  color: #1E2952;
+  background-color: white;
   padding-left: 20px;
   padding-right: 20px;
 }

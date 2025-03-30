@@ -79,3 +79,16 @@ dbClearResult(this_table)
 {this_row <- dbSendQuery(con, "SELECT * FROM bing WHERE bi_id = 10")
 row_10 <- dbFetch(this_row)
 dbClearResult(this_row)}
+
+# 4. Creating new negative words with different apostrophe ####
+apostrophe_1 <- "'"
+apostrophe_2 <- "’"
+
+negative_words_addendum <- negative_words %>% 
+  filter(grepl(apostrophe_1, word))
+
+negative_words_addendum$word <- str_replace(negative_words_addendum$word, apostrophe_1, apostrophe_2)
+
+
+negative_words_addendum$word[30]
+negative_words$word[62]
