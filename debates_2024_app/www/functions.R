@@ -472,6 +472,14 @@ collect_sentiments <- function(corpus, this_dictionary, negations){
   return(collected_sentiments_df)
 }
 
+# Sentiments, graph, horizontal
+horizontal_grouped_graph <- function(file, grouping_value, these_colors){
+  this_grouped_file <- file %>% 
+    group_by(grouping_value) %>% 
+    summarise(Positive = sum(Sen_Doc[Assessment == "likely positive"]),
+              Negative = sum(Sen_Doc[Assessment == "likely negative"]))
+}
+
 
 ## END OF THE FUNCTIONS \_()_/ ##
 

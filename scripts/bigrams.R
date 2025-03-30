@@ -108,6 +108,12 @@ collect_sentiments <- function(corpus, this_dictionary){
 # Running the functions ####
 collected_sentiments <- collect_sentiments(debates_2024, bing_sentiment) 
 
+# The graph ####
+this_grouped_file <- collected_sentiments %>% 
+  group_by(person) %>% 
+  summarise(Positive = sum(Sen_Doc[Assessment == "likely positive"]),
+            Negative = sum(Sen_Doc[Assessment == "likely negative"]))
+
 # Test: failed and successful ####
 # Run "sentences_corpus" as:
 #by_sentence_df <- sentences_corpus(debates_2024)  

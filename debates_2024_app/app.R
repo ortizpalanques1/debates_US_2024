@@ -284,6 +284,18 @@ ui <- fluidPage(
         column(
           2,
         )
+      ),
+      fluidRow(
+        column(
+          2
+        ),
+        column(
+          8,
+          plotOutput("sentiment_graph_1")
+        ),
+        column(
+          2
+        )
       )
     )
   )
