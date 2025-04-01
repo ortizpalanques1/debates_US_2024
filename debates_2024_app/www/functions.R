@@ -488,9 +488,10 @@ grouped_graph_sentiments <- function(file
                                      ){
   the_graph <- file %>% 
     pivot_longer(!person, names_to = "sentiment", values_to = "proportion") %>% 
-    ggplot(aes(person, proportion, fill = sentiment))+
+    ggplot(aes(person, proportion, fill = sentiment, label = proportion))+
     geom_col()+
-    scale_fill_manual(values = c("#a00000","#00ff41"))
+    scale_fill_manual(values = c("#a00000","#00ff41"))+
+    geom_text(size = 3, position = position_stack(vjust = 0.5)) 
   return(the_graph)
 }
 
