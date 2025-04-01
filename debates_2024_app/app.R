@@ -291,15 +291,32 @@ ui <- fluidPage(
         ),
         column(
           8,
-          plotOutput("sentiment_graph_1")
-        ),
-        column(
-          2
-        )
-      ),
-      fluidRow(
-        DT::dataTableOutput(
-          "sentimental_table_grouped"
+          # fluidRow(
+          #   column(12,div(style = "height:100px;"))
+          # ),
+          fluidRow(
+            column(
+              12,
+              div(style = "height:100px;"),
+              h3(sentiment_synthesis_graph)     
+            )
+          ),
+          fluidRow(
+            plotOutput("sentiment_graph_1")
+          ),
+          fluidRow(
+            column(
+              12,
+              div(style = "height:100px;"),
+              h3(sentiment_synthesis_table)     
+            )
+          ),
+          fluidRow(
+            class = "selector_pad",
+            DT::dataTableOutput(
+              "sentimental_table_grouped"
+            )
+          )
         )
       )
     )

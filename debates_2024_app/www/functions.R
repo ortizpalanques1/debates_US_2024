@@ -489,7 +489,8 @@ grouped_graph_sentiments <- function(file
   the_graph <- file %>% 
     pivot_longer(!person, names_to = "sentiment", values_to = "proportion") %>% 
     ggplot(aes(person, proportion, fill = sentiment))+
-    geom_col()
+    geom_col()+
+    scale_fill_manual(values = c("#a00000","#00ff41"))
   return(the_graph)
 }
 
@@ -525,6 +526,8 @@ title_section_04 <- "TF-IDF Analysis"
 #Tab3
 sentiment_dictionaries <- "Sentiment-Dictionaries"
 title_section_05 <- "Sentiment Analysis by Sentence"
+sentiment_synthesis_graph <- "Graph: Synthesis of the Sentiments by Sentence"
+sentiment_synthesis_table <- "Table: Synthesis of the Sentiments by Sentence"
 
 # Variables ####
 # Selector Vocabulary tab
