@@ -473,11 +473,24 @@ collect_sentiments <- function(corpus, this_dictionary, negations){
 }
 
 # Sentiments, graph, horizontal
-horizontal_grouped_graph <- function(file, grouping_value, these_colors){
+grouped_table_sentiments <- function(file, the_grouping_var){
+  this_grouping_var <- deparse(substitute(the_grouping_var))
   this_grouped_file <- file %>% 
-    group_by(grouping_value) %>% 
+    group_by(get(this_grouping_var)) %>% 
     summarise(Positive = sum(Sen_Doc[Assessment == "likely positive"]),
               Negative = sum(Sen_Doc[Assessment == "likely negative"]))
+  colnames(this_grouped_file)[1] <- this_grouping_var
+    return(this_grouped_file)
+}
+
+grouped_graph_sentiments <- function(file
+                                     #, the_colors
+                                     ){
+  the_graph <- file %>% 
+    pivot_longer(!person, names_to = "sentiment", values_to = "proportion") %>% 
+    ggplot(aes(person, proportion, fill = sentiment))+
+    geom_col()
+  return(the_graph)
 }
 
 
