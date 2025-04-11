@@ -490,8 +490,22 @@ grouped_graph_sentiments <- function(file
     pivot_longer(!person, names_to = "sentiment", values_to = "proportion") %>% 
     ggplot(aes(person, proportion, fill = sentiment, label = proportion))+
     geom_col()+
-    scale_fill_manual(values = c("#a00000","#00ff41"))+
-    geom_text(size = 3, position = position_stack(vjust = 0.5)) 
+    scale_fill_manual("Sentiments", values = c("#a00000","#00ff41"))+
+    geom_text(size = 5, font_face = "bold", position = position_stack(vjust = 0.5))+
+    labs(
+      x = "Person",
+      y = "Proportion"
+    )+
+    theme(
+      axis.text = element_text(family =  "TT Times New Roman", face = "bold", color = "black"),
+      axis.text.x = element_text(size = 14, angle = 45, vjust = 1, hjust=1),
+      axis.text.y = element_text(size = 16),
+      axis.ticks.y = element_line(color = "black"),
+      legend.position = "right",
+      legend.text = element_text(size = 16, color = "black", face = "bold"),
+      panel.background = element_blank(),
+      panel.grid = element_blank()
+    )
   return(the_graph)
 }
 

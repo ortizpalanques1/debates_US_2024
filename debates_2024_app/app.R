@@ -323,7 +323,7 @@ ui <- fluidPage(
   )
 )
 
-# Define server 
+# Define server #
 server <- function(input, output) {
   
   # TAB 1 #
