@@ -468,6 +468,8 @@ collect_sentiments <- function(corpus, this_dictionary, negations){
     "Assessment" = sapply(those_sentiments_beta,"[[",5)
   ) 
   collected_sentiments_df <- left_join(collected_sentiments_df, by_sentence, by = "sentence_ID") %>% 
+    mutate(Sen_Cor = round(Sen_Cor*100, 2),
+           Sen_Doc = round(Sen_Doc*100, 2)) %>% 
     select(sentence_ID, person, sentence, Assessment, Negation, Sen_Cor, Sen_Doc)
   return(collected_sentiments_df)
 }
@@ -491,10 +493,10 @@ grouped_graph_sentiments <- function(file
     ggplot(aes(person, proportion, fill = sentiment, label = proportion))+
     geom_col()+
     scale_fill_manual("Sentiments", values = c("#a00000","#00ff41"))+
-    geom_text(size = 5, font_face = "bold", position = position_stack(vjust = 0.5))+
+    geom_text(size = 5, fontface = "bold", position = position_stack(vjust = 0.5))+
     labs(
       x = "Person",
-      y = "Proportion"
+      y = "Percentage"
     )+
     theme(
       axis.text = element_text(family =  "TT Times New Roman", face = "bold", color = "black"),
@@ -503,6 +505,7 @@ grouped_graph_sentiments <- function(file
       axis.ticks.y = element_line(color = "black"),
       legend.position = "right",
       legend.text = element_text(size = 16, color = "black", face = "bold"),
+      legend.title = element_text(size = 16, color = "black", face = "bold"),
       panel.background = element_blank(),
       panel.grid = element_blank()
     )
