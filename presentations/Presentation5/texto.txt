@@ -1,0 +1,30 @@
+Sentiment Analysis: Positive and Negative Sentences
+Classifying the different elements of a document is a key step in discourse analysis. A starting point in the research might be using a predetermined list of words, each indicating a particular orientation or feeling. For instance, "hate" can signal a negative sentiment and "love" a positive one. Afterward, you can count the sentences according to the sentiment they carry.
+Our goal was precisely to replicate this process. Using R and Tidyverse tools, we took the text of the 2024 presidential and vice presidential debates, divided it into sentences, and applied a sentiment dictionary to the contents of each element. The steps are as follows:
+The program separated each intervention into sentences, and each received two weights according to the number of words in the total corpus and the author's participation.
+Using the "Bing" dictionary of sentiments (https://www.cs.uic.edu/~liub/FBS/sentiment-analysis.html), our script searched for words representing a positive or negative sentiment.
+Once the script completes the analysis, the researcher can see the proposed classification for each sentence: "likely positive," "likely negative," and "indecisive." 
+A bar graphic and a table synthesize the percentual use of each sentiment (adding up the weights of the sentences).
+The attention to some limitations allows the best use of this tool:
+Words in the dictionaries can lead to misguided conclusions: "trump" (the noun) and "vice" (as in "vice president") can be classified as positive or negative even if they refer to the name or the title. 
+Using positive and negative words in the same sentence leads to indecisive results.
+
+
+Análisis de sentimientos: oraciones positivas y negativas
+Clasificar los diferentes elementos de un documento es un paso clave en el análisis del discurso. Un punto de partida en la investigación podría ser el uso de una lista predeterminada de palabras, cada una de las cuales indica una orientación o sentimiento particular. Por ejemplo, el "odio" puede indicar un sentimiento negativo y el "amor" uno positivo. Posteriormente, es posible contar las frases según el sentimiento que transmiten.
+Nuestro objetivo fue, precisamente, replicar este proceso. Con las herramientas de R y Tidyverse, tomamos el texto de los debates presidenciales y vicepresidenciales de 2024, lo dividimos en oraciones y aplicamos un diccionario de sentimientos al contenido de cada elemento. 
+Los pasos fueron los siguientes:
+El programa separó cada intervención en frases, y cada una recibió dos ponderaciones según el número de palabras del corpus total y la participación del autor.
+Utilizando el diccionario de sentimientos "Bing" (https://www.cs.uic.edu/~liub/FBS/sentiment-analysis.html), nuestro script buscó palabras que representaran un sentimiento positivo o negativo. Una vez que el script completa el análisis, el investigador puede ver la clasificación propuesta para cada oración: "probablemente positiva", "probablemente negativa" e "indecisa". 
+Un gráfico de barras y una tabla sintetizan el uso porcentual de cada sentimiento (sumando los pesos de las oraciones). 
+La atención a algunas limitaciones permite el mejor uso de esta herramienta: 
+Las palabras en los diccionarios pueden llevar a conclusiones equivocadas: "trump" (el sustantivo) y "vice" (como en "vicepresidente") pueden clasificarse como positivos o negativos incluso si se refieren al apellido o al título. 
+El uso de palabras positivas y negativas en la misma oración conduce a resultados indecisos. 
+
+
+To read the previous announcements of this project, please visit: 
+Para leer los anuncios anteriores de este proyecto, visite:
+https://www.linkedin.com/feed/update/urn:li:activity:7298453235063738368/
+https://www.linkedin.com/feed/update/urn:li:activity:7287958076245086211/
+
+https://github.com/ortizpalanques1
