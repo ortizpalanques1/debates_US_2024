@@ -286,31 +286,42 @@ ui <- fluidPage(
         )
       ),
       fluidRow(
+        div(style = "height:100px;"),
+        h3(sentiment_synthesis_graph)
+      ),
+      fluidRow(
         column(
-          2
+          2,
+          align = "center",
+          downloadButton(
+            "download_graph_sentiment_sentence",
+            label = "Download this Graph",
+            class = "button"
+          )
         ),
         column(
           8,
-          # fluidRow(
-          #   column(12,div(style = "height:100px;"))
-          # ),
-          fluidRow(
-            column(
-              12,
-              div(style = "height:100px;"),
-              h3(sentiment_synthesis_graph)     
-            )
-          ),
           fluidRow(
             plotOutput("sentiment_graph_1")
-          ),
-          fluidRow(
-            column(
-              12,
-              div(style = "height:100px;"),
-              h3(sentiment_synthesis_table)     
-            )
-          ),
+          )
+        )
+      ),
+      fluidRow(
+        div(style = "height:100px;"),
+        h3(sentiment_synthesis_table) 
+      ),
+      fluidRow(
+        column(
+          2,
+          align = "center",
+          downloadButton(
+            "download_table_sentiment_sentence",
+            label = "Download this Table",
+            class = "button"
+          )
+        ),
+        column(
+          8,
           fluidRow(
             class = "selector_pad",
             DT::dataTableOutput(
@@ -608,6 +619,36 @@ server <- function(input, output) {
   output$sentimental_table_grouped <- DT::renderDataTable(collected_sentiments_grouped())
   
   output$sentiment_graph_1 <- renderPlot(grouped_graph_sentiments(collected_sentiments_grouped()))
+  
+  output$download_graph_sentiment_sentence <- downloadHandler(
+    filename <- function(){
+      paste("sentiment_sentence_graph_", Sys.Date(), ".png", sep = "")
+    },
+    content = function(con){
+      ggsave(
+        con,
+        plot = grouped_graph_sentiments(collected_sentiments_grouped()),
+        device = "png",
+        units = "cm",
+        width = 32,
+        height = 18,
+        dpi = 300,
+        scale = 1
+      )
+    }
+  )
+  
+  output$download_table_sentiment_sentence <- downloadHandler(
+    filename <- function(){
+      paste("sentiment_sentence_table_", Sys.Date(), ".csv", sep = "")
+    },
+    content = function(con){
+      write.csv(
+        collected_sentiments_grouped(),
+        con
+      )
+    }
+  )
   
   
 }
