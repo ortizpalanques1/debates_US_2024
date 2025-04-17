@@ -261,6 +261,7 @@ ui <- fluidPage(
           fluidRow(
             column(
               12,
+              align = "center",
               selectInput(
                 "dictionaries", 
                 "Dictionaries", 
@@ -270,6 +271,11 @@ ui <- fluidPage(
                 max_height = 250,
                 card_header(textOutput("title_dictionary")),
                 card_body(textOutput("dictionary_description"))
+              ),
+              downloadButton(
+                "download_table_total_sentiment_sentence",
+                label = "Download this Table",
+                class = "button"
               )
             )
           )
@@ -619,6 +625,18 @@ server <- function(input, output) {
   output$sentimental_table_grouped <- DT::renderDataTable(collected_sentiments_grouped())
   
   output$sentiment_graph_1 <- renderPlot(grouped_graph_sentiments(collected_sentiments_grouped()))
+  
+  output$download_table_total_sentiment_sentence <- downloadHandler(
+    filename <- function(){
+      paste("total_sentiment_sentence_table_", Sys.Date(), ".csv", sep = "")
+    },
+    content = function(con){
+      write.csv(
+        collected_sentiments(),
+        con
+      )
+    }
+  )
   
   output$download_graph_sentiment_sentence <- downloadHandler(
     filename <- function(){
