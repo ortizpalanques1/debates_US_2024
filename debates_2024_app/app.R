@@ -272,6 +272,18 @@ ui <- fluidPage(
                 card_header(textOutput("title_dictionary")),
                 card_body(textOutput("dictionary_description"))
               ),
+              fluidRow(
+                h3(edit_dictionary),
+                selectInput("edit_dictionary", 
+                            "Select Words", 
+                            choices = NULL,
+                            selected = NULL, 
+                            multiple = TRUE, 
+                            selectize = TRUE, 
+                            width = NULL, 
+                            size = NULL
+                )
+              ),
               downloadButton(
                 "download_table_total_sentiment_sentence",
                 label = "Download this Table",
@@ -667,6 +679,11 @@ server <- function(input, output) {
       )
     }
   )
+  
+  observeEvent(input$dictionaries,{
+    choices <- edit_dictionay_f("word", input$dictionaries)
+    updateSelectInput(inputId = "edit_dictionary", choices = choices)
+  })
   
   
 }

@@ -512,6 +512,15 @@ grouped_graph_sentiments <- function(file
   return(the_graph)
 }
 
+# Selecting column from table
+edit_dictionay_f <- function(column, table){
+  the_query <- paste0("SELECT ", column, " FROM ", table, ";")
+  this_vector <- dbSendQuery(con, the_query)
+  working_data <- dbFetch(this_vector)
+  dbClearResult(this_vector)
+  return(working_data)
+}
+
 
 ## END OF THE FUNCTIONS \_()_/ ##
 
@@ -542,10 +551,11 @@ title_section_03 <- "Synthesis of the Vocabulary"
 title_section_04 <- "TF-IDF Analysis"
 
 #Tab3
+edit_dictionary <- "Edit this Dictionary"
 sentiment_dictionaries <- "Sentiment-Dictionaries"
-title_section_05 <- "Sentiment Analysis by Sentence"
 sentiment_synthesis_graph <- "Graph: Synthesis of the Sentiments by Sentence"
 sentiment_synthesis_table <- "Table: Synthesis of the Sentiments by Sentence"
+title_section_05 <- "Sentiment Analysis by Sentence"
 
 # Variables ####
 # Selector Vocabulary tab
