@@ -273,16 +273,18 @@ ui <- fluidPage(
                 card_body(textOutput("dictionary_description"))
               ),
               fluidRow(
+                style = "height: 200px; overflow-y: auto;", 
                 h3(edit_dictionary),
-                selectInput("edit_dictionary", 
+                align = "left",
+                checkboxGroupInput("edit_dictionary", 
                             "Select Words", 
                             choices = NULL,
                             selected = NULL, 
-                            multiple = TRUE, 
-                            selectize = TRUE, 
+                            #multiple = TRUE, 
+                            #selectize = TRUE, 
                             width = NULL, 
-                            size = NULL
-                )
+                            #size = NULL
+                ),
               ),
               downloadButton(
                 "download_table_total_sentiment_sentence",
@@ -682,7 +684,8 @@ server <- function(input, output) {
   
   observeEvent(input$dictionaries,{
     choices <- edit_dictionay_f("word", input$dictionaries)
-    updateSelectInput(inputId = "edit_dictionary", choices = choices)
+    print(choices$word)
+    updateCheckboxGroupInput (inputId = "edit_dictionary", choices = choices$word)
   })
   
   
