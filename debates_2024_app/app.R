@@ -273,8 +273,10 @@ ui <- fluidPage(
                 card_body(textOutput("dictionary_description"))
               ),
               fluidRow(
-                style = "height: 200px; overflow-y: auto;", 
-                h3(edit_dictionary),
+                h3(edit_dictionary)
+              ),
+              fluidRow(
+                style = "height: 200px; overflow-y: auto; padding-left: 20px;", 
                 align = "left",
                 checkboxGroupInput("edit_dictionary", 
                             "Select Words", 
