@@ -282,16 +282,18 @@ ui <- fluidPage(
                             "Select Words", 
                             choices = NULL,
                             selected = NULL, 
-                            #multiple = TRUE, 
-                            #selectize = TRUE, 
                             width = NULL, 
-                            #size = NULL
                 ),
               ),
-              downloadButton(
-                "download_table_total_sentiment_sentence",
-                label = "Download this Table",
-                class = "button"
+              fluidRow(
+                actionButton("editor", label = "Without These Words")
+              ),
+              fluidRow(
+                downloadButton(
+                  "download_table_total_sentiment_sentence",
+                  label = "Download this Table",
+                  class = "button"
+                )
               )
             )
           )
@@ -690,6 +692,19 @@ server <- function(input, output) {
     updateCheckboxGroupInput (inputId = "edit_dictionary", choices = choices$word)
   })
   
+  # store as a vector to be called wherever desired
+  # evaluated whenever inputs change
+  # bing_edited_words <- reactive({
+  #   the_vector <- as.vector(input$edit_dictionary)
+  #   the_vector
+  # })
+  
+  observeEvent( input$editor, {
+    isolate({
+      the_edited_vector <- as.vector(input$edit_dictionary)
+    })
+    print(the_edited_vector)
+  })
   
 }
 
