@@ -521,6 +521,16 @@ edit_dictionay_f <- function(column, table){
   return(working_data)
 }
 
+# Selecting column without a vector of values from a table
+edited_dictionay_f <- function(select_column, table, from_column, values){
+  the_query <- paste0("SELECT ", select_column, " FROM ", table, " WHERE ", from_column, " NOT IN (", paste("\'", values, collapse = ",", "\'", sep = ""), ");")
+  print(the_query)
+  this_vector <- dbSendQuery(con, the_query)
+  working_data <- dbFetch(this_vector)
+  dbClearResult(this_vector)
+  return(working_data)
+}
+
 
 ## END OF THE FUNCTIONS \_()_/ ##
 
@@ -563,3 +573,6 @@ vocabulary_selector <- c("Number of Words", "Unique Words", "Vocabulary Diversit
 
 # SQL Variables
 
+animales <- c("perro", "gato", "burro")
+print(animales)
+cat(paste("\'", animales, collapse = ",", "\'", sep = ""), "\n")

@@ -688,7 +688,6 @@ server <- function(input, output) {
   
   observeEvent(input$dictionaries,{
     choices <- edit_dictionay_f("word", input$dictionaries)
-    print(choices$word)
     updateCheckboxGroupInput (inputId = "edit_dictionary", choices = choices$word)
   })
   
@@ -704,6 +703,9 @@ server <- function(input, output) {
       the_edited_vector <- as.vector(input$edit_dictionary)
     })
     print(the_edited_vector)
+    print(class(the_edited_vector))
+    my_selected_vector <- edited_dictionay_f("word", input$dictionaries, "word", the_edited_vector)
+    print(my_selected_vector$word[1:10])
   })
   
 }
