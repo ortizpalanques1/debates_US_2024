@@ -1,6 +1,9 @@
 # Libraries ####
 library(tidyverse)
 library(tidytext)
+library(RMariaDB)
+library(odbc)
+library(DBI)
 
 
 # Files ####
@@ -114,42 +117,65 @@ this_grouped_file <- collected_sentiments %>%
   summarise(Positive = sum(Sen_Doc[Assessment == "likely positive"]),
             Negative = sum(Sen_Doc[Assessment == "likely negative"]))
 
-# Test: failed and successful ####
-# Run "sentences_corpus" as:
-#by_sentence_df <- sentences_corpus(debates_2024)  
+# Create sentiment dictionaries in MariaDB ####
+# First, connection:
+con <- dbConnect(
+  drv = RMariaDB::MariaDB(), 
+  dbname = "sentiments_dictionaries",
+  username = "root",
+  password = "Ciencia54", 
+  host = "localhost", 
+  port = 3306
+)
 
-#evaluador_palabras("auxiliar_list", 2, 3, bing_sentiment)
+# Afinn
+# Download data frame
+afinn <- get_sentiments("afinn") %>% 
+  mutate("sentiment" = ifelse(value <= 0, "negative", "positive"),
+         "value_abs" = abs(value))
 
-# Extracting the Row Numbers for the filter ====
-# Sentiment
-# extraction_test <- sapply(those_sentiments,"[[",1)
-# sentence_debate_with_sentiment <- sentences_debate %>% 
-#   filter(sentence_ID %in% extraction_test) 
-# 
-# # Negative words
-# extract_negative_sentiment <- NULL
-# for(l in 1:length(those_sentiments)){
-#   if(those_sentiments[[l]][[3]] == TRUE){
-#     the_negation <- those_sentiments[[l]][[1]]
-#     extract_negative_sentiment <- c(extract_negative_sentiment, the_negation)
-#   }
-# }
+# create database in mariaDB
+the_query <- ("CREATE TABLE afinn ( 
+              id_af INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+              word VARCHAR(30),
+              value INT,
+              sentiment VARCHAR(30),
+              value_abs INT
+              );")
+dbSendQuery(con, the_query)
 
-# sentence_debate_with_sentiment <- sentence_debate_with_sentiment %>% 
-#   mutate(Negative = ifelse(sentence_debate_with_sentiment$sentence_ID %in% extract_negative_sentiment, TRUE, FALSE))
+# upload dataframe to database
+dbAppendTable(con, "afinn", afinn, row.names = NULL)
 
-# Test: Creating string to assess ####
-# the_master_filter <- 4
-# the_master_filter_02 <- 8
-# the_final_master_filter <- c(the_master_filter, the_master_filter_02)
-# the_filter <- paste0("dplyr::filter(mtcars, carb !=  ", the_master_filter, ")")
-# the_filter_02 <- paste0("mtcars[!(mtcars$carb %in% c(", paste(the_final_master_filter, collapse = ", "), ")),]")
 
-# test_filters <-   eval(parse(text = paste0(the_filter)))
-# test_filters <-   eval(parse(text = paste0(the_filter_02)))
-# 
-# 
-# test_vector <- c("welcome", "greed")
-# partial_evaluations <- ifelse(test_vector %in% bing_sentiment$word[bing_sentiment$sentiment == "positive"],1,0)
-# test_numeric <- c(5,4,6,3)
-# partial_evaluations <- ifelse(test_numeric > 4 ,1,0)
+# NRC
+# Download data frame
+nrc <- get_sentiments("nrc")
+
+# create database in mariaDB
+the_query <- ("CREATE TABLE nrc ( 
+              id_nr INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+              word VARCHAR(30),
+              sentiment VARCHAR(30)
+              );")
+dbSendQuery(con, the_query)
+
+# upload dataframe to database
+dbAppendTable(con, "nrc", nrc, row.names = NULL)
+
+# Append both tables in meta_data table
+tables <- c("afinn", "nrc")
+language <- "English"
+types <- "Sentiment"
+descriptio_afinn <- " \"AFINN is a list of words rated for valence with an integer between minus five (negative) and plus five (positive). Sentiment analysis is performed by cross-checking the string tokens (words, emojis) with the AFINN list and getting their respective scores. The comparative score is simply: sum of each token / number of tokens\" (https://www.npmjs.com/package/sentiment). URL: http://www2.imm.dtu.dk/pubdb/views/publication_details.php?id=6010. License: Open Database License (ODbL) v1.0 "
+descriptio_nrc <- " \"The NRC Emotion Lexicon is a list of English words and their associations with eight basic emotions (anger, fear, anticipation, trust, surprise, sadness, joy, and disgust) and two sentiments (negative and positive). The annotations were manually done by crowdsourcing\" (https://saifmohammad.com/WebPages/NRC-Emotion-Lexicon.htm). Visit the page to understand the \"TERMS OF USE\""
+descriptions <- c(descriptio_afinn, descriptio_nrc)
+
+append_data <- data.frame(
+  tables_dictio = tables,
+  description = descriptions,
+  language_dictio = language,
+  type_dictio = "Sentiment",
+  include_sentiments = TRUE
+)
+dbAppendTable(con, "meta_data", append_data, row.names = NULL)
