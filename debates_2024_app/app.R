@@ -686,26 +686,73 @@ server <- function(input, output) {
     }
   )
   
+  
+  # Selecting words to be edited from a dictionary
   observeEvent(input$dictionaries,{
     choices <- edit_dictionay_f("word", input$dictionaries)
     updateCheckboxGroupInput (inputId = "edit_dictionary", choices = choices$word)
   })
   
-  # store as a vector to be called wherever desired
-  # evaluated whenever inputs change
-  # bing_edited_words <- reactive({
-  #   the_vector <- as.vector(input$edit_dictionary)
-  #   the_vector
-  # })
-  
+  # Button to give the new values in general table, grouped table and graph once
+  # values to eliminate are selected
   observeEvent( input$editor, {
     isolate({
       the_edited_vector <- as.vector(input$edit_dictionary)
     })
     print(the_edited_vector)
     print(class(the_edited_vector))
-    my_selected_vector <- edited_dictionay_f("word", input$dictionaries, "word", the_edited_vector)
-    print(my_selected_vector$word[1:10])
+    my_selected_vector <- edited_dictionay_f("*", input$dictionaries, "word", the_edited_vector)
+    print(my_selected_vector[1:10,])
+    collected_sentiments <- reactive({
+      collect_sentiments(debates_2024, my_selected_vector, negative_words)
+    })
+    output$sentimental_table <- DT::renderDataTable(collected_sentiments())
+    collected_sentiments_grouped <- reactive({
+      grouped_table_sentiments(collected_sentiments(), person)
+    })
+    output$sentimental_table_grouped <- DT::renderDataTable(collected_sentiments_grouped())
+    output$sentiment_graph_1 <- renderPlot(grouped_graph_sentiments(collected_sentiments_grouped()))
+    output$download_table_total_sentiment_sentence <- downloadHandler(
+      filename <- function(){
+        paste("total_sentiment_sentence_table_", Sys.Date(), ".csv", sep = "")
+      },
+      content = function(con){
+        write.csv(
+          collected_sentiments(),
+          con
+        )
+      }
+    )
+    
+    output$download_graph_sentiment_sentence <- downloadHandler(
+      filename <- function(){
+        paste("sentiment_sentence_graph_", Sys.Date(), ".png", sep = "")
+      },
+      content = function(con){
+        ggsave(
+          con,
+          plot = grouped_graph_sentiments(collected_sentiments_grouped()),
+          device = "png",
+          units = "cm",
+          width = 32,
+          height = 18,
+          dpi = 300,
+          scale = 1
+        )
+      }
+    )
+    
+    output$download_table_sentiment_sentence <- downloadHandler(
+      filename <- function(){
+        paste("sentiment_sentence_table_", Sys.Date(), ".csv", sep = "")
+      },
+      content = function(con){
+        write.csv(
+          collected_sentiments_grouped(),
+          con
+        )
+      }
+    )
   })
   
 }

@@ -570,9 +570,3 @@ title_section_05 <- "Sentiment Analysis by Sentence"
 # Variables ####
 # Selector Vocabulary tab
 vocabulary_selector <- c("Number of Words", "Unique Words", "Vocabulary Diversity")
-
-# SQL Variables
-
-animales <- c("perro", "gato", "burro")
-print(animales)
-cat(paste("\'", animales, collapse = ",", "\'", sep = ""), "\n")
