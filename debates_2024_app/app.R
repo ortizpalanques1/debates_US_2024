@@ -306,7 +306,9 @@ ui <- fluidPage(
           )
         ),
         column(
+          class = "edit_area",
           2,
+          uiOutput("edit_sentiment_table")
         )
       ),
       fluidRow(
@@ -755,6 +757,21 @@ server <- function(input, output) {
       }
     )
   })
+  
+  # Edit table section
+  output$edit_sentiment_table <- renderUI(
+    if(input$dictionaries == "bing"){
+      selectInput(inputId = "all_outputs",
+                  label = "Edit the Assessment Column", 
+                  choices = sort(bing_table_output)
+      )
+      
+    }else if(input$dictionaries == "afinn"){
+      print("This dictionary cannot be edited. Afinn")
+    } else {
+      print("This dictionary is not editable. NRC")
+    }
+  )
   
 }
 

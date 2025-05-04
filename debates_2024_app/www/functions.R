@@ -561,6 +561,7 @@ title_section_03 <- "Synthesis of the Vocabulary"
 title_section_04 <- "TF-IDF Analysis"
 
 #Tab3
+bing_table_output <- c("indecisive", "likely positive", "likely negative")
 edit_dictionary <- "Edit this Dictionary"
 sentiment_dictionaries <- "Sentiment-Dictionaries"
 sentiment_synthesis_graph <- "Graph: Synthesis of the Sentiments by Sentence"
