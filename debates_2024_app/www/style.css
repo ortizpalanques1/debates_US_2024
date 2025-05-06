@@ -41,6 +41,13 @@ p{
   font-weight: bold;
 }
 
+.button_editor{
+  background-color: #008900;
+  color:  #E9FCE9;
+  border-color: #E9FCE9;
+  font-weight: bold;
+}
+
 .column_selection{
   background-color: #1E2952;
   color: #B9D9EB;
@@ -48,6 +55,7 @@ p{
 
 .edit_area{
   background-color: #008900;
+  color:  #E9FCE9;
 }
 
 .explanation{

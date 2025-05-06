@@ -758,13 +758,17 @@ server <- function(input, output) {
     )
   })
   
-  # Edit table section
+  # Edit the sentiment table section
   output$edit_sentiment_table <- renderUI(
     if(input$dictionaries == "bing"){
-      selectInput(inputId = "all_outputs",
-                  label = "Edit the Assessment Column", 
-                  choices = sort(bing_table_output)
+      tagList(
+        selectInput(inputId = "all_outputs",
+                    label = "Edit the Assessment Column", 
+                    choices = sort(bing_table_output)
+        ),
+        actionButton("sentiment_table_editor", label = "Change", class = "button_editor")
       )
+      
       
     }else if(input$dictionaries == "afinn"){
       print("This dictionary cannot be edited. Afinn")
@@ -774,6 +778,22 @@ server <- function(input, output) {
   )
   
 }
+
+observeEvent(input$sentiment_table_editor, { 
+  tmp <- collected_sentiments()
+  tmp[input$sentimental_table_cells_selected[1], input$sentimental_table_cells_selected[2]] <- input$all_outputs
+  print(tmp[input$sentimental_table_cells_selected[1], input$sentimental_table_cells_selected[2]])
+  collected_sentiments(tmp)
+})
+
+observeEvent(input$my_table_cells_selected, {
+    req(input$my_table_cells_selected)
+    print( 
+       paste("This is a somewhat important message:", 
+             input$my_table_cells_selected[1],
+             input$my_table_cells_selected[2])
+       )
+  })
 
 # Run the application 
 shinyApp(ui = ui, server = server)
