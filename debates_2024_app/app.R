@@ -768,6 +768,7 @@ server <- function(input, output) {
   output$edit_sentiment_table <- renderUI(
     if(input$dictionaries == "bing"){
       tagList(
+        actionButton("start_table_editor", label = "Edit This Table", class = "button_editor"),
         selectInput(inputId = "all_outputs",
                     label = "Edit the Assessment Column",
                     choices = sort(bing_table_output)
@@ -781,9 +782,14 @@ server <- function(input, output) {
     }
   )
   
+  
   observeEvent(input$sentiment_table_editor, { 
     tmp <- collected_sentiments()
     output$sentimental_table <- DT::renderDataTable(tmp, selection = list(mode = "single", target = "cell"))
+    # print(tmp()[1,2])
+    # print(input$sentimental_table_cells_selected[1])
+    # print(input$sentimental_table_cells_selected[2])
+    # print(tmp()[input$sentimental_table_cells_selected[1], input$sentimental_table_cells_selected[2]])
     tmp[input$sentimental_table_cells_selected[1], input$sentimental_table_cells_selected[2]] <- input$all_outputs
     collected_sentiments_grouped_edited <- reactive({
       grouped_table_sentiments(tmp, person)
