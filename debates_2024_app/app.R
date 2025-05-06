@@ -784,11 +784,11 @@ server <- function(input, output) {
   observeEvent(input$sentiment_table_editor, { 
     tmp <- collected_sentiments()
     output$sentimental_table <- DT::renderDataTable(tmp, selection = list(mode = "single", target = "cell"))
-    print(tmp[1,])
     tmp[input$sentimental_table_cells_selected[1], input$sentimental_table_cells_selected[2]] <- input$all_outputs
-    
-    print(tmp[1,])
-    
+    collected_sentiments_grouped_edited <- reactive({
+      grouped_table_sentiments(tmp, person)
+    })
+    output$sentimental_table_grouped <- DT::renderDataTable(collected_sentiments_grouped_edited())
   })
   
 # FINAL  
