@@ -638,6 +638,7 @@ server <- function(input, output) {
     collect_sentiments(debates_2024, selected_sentiments(), negative_words)
   })
   
+  
   # Displaying the sentiments' table
   output$sentimental_table <- DT::renderDataTable(collected_sentiments(),
                                                   selection = list(mode = "single", target = "cell"))
@@ -782,8 +783,10 @@ server <- function(input, output) {
   
   observeEvent(input$sentiment_table_editor, { 
     tmp <- collected_sentiments()
+    output$sentimental_table <- DT::renderDataTable(tmp, selection = list(mode = "single", target = "cell"))
     print(tmp[1,])
     tmp[input$sentimental_table_cells_selected[1], input$sentimental_table_cells_selected[2]] <- input$all_outputs
+    
     print(tmp[1,])
     
   })
