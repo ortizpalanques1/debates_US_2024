@@ -783,7 +783,7 @@ server <- function(input, output) {
   )
   
   tmp <- eventReactive(input$start_table_editor,{
-    collected_sentiments()
+    isolate(collected_sentiments())
   })
   
   observeEvent(input$sentiment_table_editor, { 
