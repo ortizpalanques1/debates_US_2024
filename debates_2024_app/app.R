@@ -765,6 +765,7 @@ server <- function(input, output) {
   })
   
   # Edit the sentiment table section
+  # Dictionary selector for edition of sentiments
   output$edit_sentiment_table <- renderUI(
     if(input$dictionaries == "bing"){
       tagList(
@@ -782,22 +783,27 @@ server <- function(input, output) {
     }
   )
   
-  tmp <- eventReactive(input$start_table_editor,{
-    isolate(collected_sentiments())
+  # Bing edition functions
+  # Empty table
+  editable_sentimental_table <- reactiveValues(
+    df_data = NULL
+  )
+  
+  # Table is filled with the function 
+  observeEvent(input$start_table_editor,{
+    editable_sentimental_table$df_data <- collect_sentiments(debates_2024, selected_sentiments(), negative_words)
   })
   
-  observeEvent(input$sentiment_table_editor, { 
-    #tmp <- collected_sentiments()
-    output$sentimental_table <- DT::renderDataTable(tmp(), selection = list(mode = "single", target = "cell"))
-    print(tmp()[1,2])
-    print(input$sentimental_table_cells_selected[1])
-    print(input$sentimental_table_cells_selected[2])
-    print(tmp()[input$sentimental_table_cells_selected[1], input$sentimental_table_cells_selected[2]])
-    tmp()[input$sentimental_table_cells_selected[1], input$sentimental_table_cells_selected[2]] <- input$all_outputs
-    collected_sentiments_grouped_edited <- reactive({
-      grouped_table_sentiments(tmp(), person)
-    })
-    output$sentimental_table_grouped <- DT::renderDataTable(collected_sentiments_grouped_edited())
+  # Change values in table
+  observeEvent(input$sentiment_table_editor, {
+    editor_table <- editable_sentimental_table$df_data
+    output$sentimental_table <- DT::renderDataTable(editor_table, selection = list(mode = "single", target = "cell"))
+    editor_table[input$sentimental_table_cells_selected[1], input$sentimental_table_cells_selected[2]] <- input$all_outputs
+    editable_sentimental_table$df_data <- editor_table
+    # collected_sentiments_grouped_edited <- reactive({
+    #   grouped_table_sentiments(tmp(), person)
+    # })
+    # output$sentimental_table_grouped <- DT::renderDataTable(collected_sentiments_grouped_edited())
   })
   
 # FINAL  
