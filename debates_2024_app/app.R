@@ -799,11 +799,12 @@ server <- function(input, output) {
     editor_table <- editable_sentimental_table$df_data
     output$sentimental_table <- DT::renderDataTable(editor_table, selection = list(mode = "single", target = "cell"))
     editor_table[input$sentimental_table_cells_selected[1], input$sentimental_table_cells_selected[2]] <- input$all_outputs
+    collected_sentiments_grouped_edited <- reactive({
+      grouped_table_sentiments(editor_table, person)
+    })
+    output$sentimental_table_grouped <- DT::renderDataTable(collected_sentiments_grouped_edited())
+    output$sentiment_graph_1 <- renderPlot(grouped_graph_sentiments(collected_sentiments_grouped_edited()))
     editable_sentimental_table$df_data <- editor_table
-    # collected_sentiments_grouped_edited <- reactive({
-    #   grouped_table_sentiments(tmp(), person)
-    # })
-    # output$sentimental_table_grouped <- DT::renderDataTable(collected_sentiments_grouped_edited())
   })
   
 # FINAL  
