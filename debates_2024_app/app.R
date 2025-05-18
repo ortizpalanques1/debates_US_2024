@@ -640,7 +640,7 @@ server <- function(input, output) {
   
   
   # Displaying the sentiments' table
-  output$sentimental_table <- DT::renderDataTable(collected_sentiments())
+  output$sentimental_table <- DT::renderDataTable(collected_sentiments(), selection = list(mode = "single", target = "cell"))
   
   # Graphic of the table
   # Grouped table
