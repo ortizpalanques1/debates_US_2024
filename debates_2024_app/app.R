@@ -714,7 +714,7 @@ server <- function(input, output) {
     collected_sentiments <- reactive({
       collect_sentiments(debates_2024, my_selected_vector, negative_words)
     })
-    output$sentimental_table <- DT::renderDataTable(collected_sentiments())
+    output$sentimental_table <- DT::renderDataTable(collected_sentiments(), selection = list(mode = "single", target = "cell"))
     collected_sentiments_grouped <- reactive({
       grouped_table_sentiments(collected_sentiments(), person)
     })
@@ -804,6 +804,47 @@ server <- function(input, output) {
     output$sentimental_table_grouped <- DT::renderDataTable(collected_sentiments_grouped_edited())
     output$sentiment_graph_1 <- renderPlot(grouped_graph_sentiments(collected_sentiments_grouped_edited()))
     editable_sentimental_table$df_data <- editor_table
+    
+    output$download_table_total_sentiment_sentence <- downloadHandler(
+      filename <- function(){
+        paste("total_sentiment_sentence_table_", Sys.Date(), ".csv", sep = "")
+      },
+      content = function(con){
+        write.csv(
+          editor_table,
+          con
+        )
+      }
+    )
+    output$download_graph_sentiment_sentence <- downloadHandler(
+      filename <- function(){
+        paste("sentiment_sentence_graph_", Sys.Date(), ".png", sep = "")
+      },
+      content = function(con){
+        ggsave(
+          con,
+          plot = grouped_graph_sentiments(collected_sentiments_grouped_edited()),
+          device = "png",
+          units = "cm",
+          width = 32,
+          height = 18,
+          dpi = 300,
+          scale = 1
+        )
+      }
+    )
+    
+    output$download_table_sentiment_sentence <- downloadHandler(
+      filename <- function(){
+        paste("sentiment_sentence_table_", Sys.Date(), ".csv", sep = "")
+      },
+      content = function(con){
+        write.csv(
+          collected_sentiments_grouped_edited(),
+          con
+        )
+      }
+    )
   })
   
 # FINAL  
