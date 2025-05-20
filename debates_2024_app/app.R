@@ -609,11 +609,9 @@ server <- function(input, output) {
     }
   )
   
-  # Third tab
-  # working_dictionary <- reactive({
-  #   vector_query(input$dictionaries)
-  # })
+  # Third tab ####################################################
   
+  # General section ##############################################
   # Sentiments Selector
   output$title_dictionary <- renderText({
     cap_letter(input$dictionaries)
@@ -632,7 +630,7 @@ server <- function(input, output) {
     df_query(input$dictionaries)
   })
   
-  
+  # General Table #########################################################
   # Create the sentiments' table
   collected_sentiments <- reactive({
     collect_sentiments(debates_2024, selected_sentiments(), negative_words)
@@ -694,7 +692,7 @@ server <- function(input, output) {
     }
   )
   
-  
+  # Selecting Edit Dictionary Section ###########################################
   # Selecting words to be edited from a dictionary
   observeEvent(input$dictionaries,{
     choices <- edit_dictionay_f("word", input$dictionaries)
@@ -707,10 +705,10 @@ server <- function(input, output) {
     isolate({
       the_edited_vector <- as.vector(input$edit_dictionary)
     })
-    print(the_edited_vector)
-    print(class(the_edited_vector))
+    #print(the_edited_vector)
+    #print(class(the_edited_vector))
     my_selected_vector <- edited_dictionay_f("*", input$dictionaries, "word", the_edited_vector)
-    print(my_selected_vector[1:10,])
+    #print(my_selected_vector[1:10,])
     collected_sentiments <- reactive({
       collect_sentiments(debates_2024, my_selected_vector, negative_words)
     })
@@ -761,9 +759,96 @@ server <- function(input, output) {
         )
       }
     )
-  })
+    ############################################
+    output$edit_sentiment_table <- renderUI(
+      if(input$dictionaries == "bing"){
+        tagList(
+          actionButton("start_table_editor", label = "Edit This Table", class = "button_editor"),
+          selectInput(inputId = "all_outputs",
+                      label = "Edit the Assessment Column",
+                      choices = sort(bing_table_output)
+          ),
+          actionButton("sentiment_table_editor", label = "Change", class = "button_editor")
+        )
+      }else if(input$dictionaries == "afinn"){
+        print("This dictionary cannot be edited. Afinn")
+      } else {
+        print("This dictionary is not editable. NRC")
+      }
+    )
+    
+    # Bing edition functions
+    # Empty table
+    editable_sentimental_table <- reactiveValues(
+      df_data = NULL
+    )
+    
+    # Table is filled with the function 
+    observeEvent(input$start_table_editor,{
+      editable_sentimental_table$df_data <- collect_sentiments(debates_2024, selected_sentiments(), negative_words)
+    })
+    
+    # Change values in table
+    observeEvent(input$sentiment_table_editor, {
+      editor_table <- editable_sentimental_table$df_data
+      output$sentimental_table <- DT::renderDataTable(editor_table, selection = list(mode = "single", target = "cell"))
+      editor_table[input$sentimental_table_cells_selected[1], input$sentimental_table_cells_selected[2]] <- input$all_outputs
+      collected_sentiments_grouped_edited <- reactive({
+        grouped_table_sentiments(editor_table, person)
+      })
+      output$sentimental_table_grouped <- DT::renderDataTable(collected_sentiments_grouped_edited())
+      output$sentiment_graph_1 <- renderPlot(grouped_graph_sentiments(collected_sentiments_grouped_edited()))
+      editable_sentimental_table$df_data <- editor_table
+      
+      output$download_table_total_sentiment_sentence <- downloadHandler(
+        filename <- function(){
+          paste("total_sentiment_sentence_table_", Sys.Date(), ".csv", sep = "")
+        },
+        content = function(con){
+          write.csv(
+            editor_table,
+            con
+          )
+        }
+      )
+      output$download_graph_sentiment_sentence <- downloadHandler(
+        filename <- function(){
+          paste("sentiment_sentence_graph_", Sys.Date(), ".png", sep = "")
+        },
+        content = function(con){
+          ggsave(
+            con,
+            plot = grouped_graph_sentiments(collected_sentiments_grouped_edited()),
+            device = "png",
+            units = "cm",
+            width = 32,
+            height = 18,
+            dpi = 300,
+            scale = 1
+          )
+        }
+      )
+      
+      output$download_table_sentiment_sentence <- downloadHandler(
+        filename <- function(){
+          paste("sentiment_sentence_table_", Sys.Date(), ".csv", sep = "")
+        },
+        content = function(con){
+          write.csv(
+            collected_sentiments_grouped_edited(),
+            con
+          )
+        }
+      )
+    }
+    )
+    
+    
+    ############################################
+   }
+  )
   
-  # Edit the sentiment table section
+  # Edit the sentiment table section ##########################################
   # Dictionary selector for edition of sentiments
   output$edit_sentiment_table <- renderUI(
     if(input$dictionaries == "bing"){
@@ -845,7 +930,8 @@ server <- function(input, output) {
         )
       }
     )
-  })
+   }
+  )
   
 # FINAL  
 } # Run the application 
