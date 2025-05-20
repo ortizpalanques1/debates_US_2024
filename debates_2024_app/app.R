@@ -785,7 +785,7 @@ server <- function(input, output) {
     
     # Table is filled with the function 
     observeEvent(input$start_table_editor,{
-      editable_sentimental_table$df_data <- collect_sentiments(debates_2024, selected_sentiments(), negative_words)
+      editable_sentimental_table$df_data <- collect_sentiments(debates_2024, my_selected_vector, negative_words)
     })
     
     # Change values in table
