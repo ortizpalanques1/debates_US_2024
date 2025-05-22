@@ -309,11 +309,6 @@ ui <- fluidPage(
           class = "edit_area",
           2,
           uiOutput("edit_sentiment_table")
-          # selectInput(inputId = "all_outputs",
-          #             label = "Edit the Assessment Column", 
-          #             choices = sort(bing_table_output)
-          # ),
-          # actionButton("sentiment_table_editor", label = "Change", class = "button_editor")
         )
       ),
       fluidRow(
@@ -611,86 +606,61 @@ server <- function(input, output) {
   
   # Third tab ####################################################
   
-  # General section ##############################################
-  # Sentiments Selector
-  output$title_dictionary <- renderText({
-    cap_letter(input$dictionaries)
+  # Sentiments Selector ##########################################
+  observeEvent(input$dictionaries,{
+    output$title_dictionary <- renderText({cap_letter(input$dictionaries)})
+    dictionary_description <- vector_query("meta_data", "description", "tables_dictio", input$dictionaries)
+    output$dictionary_description <- renderText({dictionary_description})
+    selected_sentiments <- df_query(input$dictionaries)
+    collected_sentiments <- collect_sentiments(debates_2024, selected_sentiments, negative_words)
+    output$sentimental_table <- DT::renderDataTable(collected_sentiments, selection = list(mode = "single", target = "cell"))
+    collected_sentiments_grouped <- grouped_table_sentiments(collected_sentiments, person)
+    output$sentimental_table_grouped <- DT::renderDataTable(collected_sentiments_grouped)
+    output$sentiment_graph_1 <- renderPlot(grouped_graph_sentiments(collected_sentiments_grouped))
+    output$download_table_total_sentiment_sentence <- downloadHandler(
+      filename <- function(){
+        paste("total_sentiment_sentence_table_", Sys.Date(), ".csv", sep = "")
+      },
+      content = function(con){
+        write.csv(
+          collected_sentiments,
+          con
+        )
+      }
+    )
+    
+    output$download_graph_sentiment_sentence <- downloadHandler(
+      filename <- function(){
+        paste("sentiment_sentence_graph_", Sys.Date(), ".png", sep = "")
+      },
+      content = function(con){
+        ggsave(
+          con,
+          plot = grouped_graph_sentiments(collected_sentiments_grouped),
+          device = "png",
+          units = "cm",
+          width = 32,
+          height = 18,
+          dpi = 300,
+          scale = 1
+        )
+      }
+    )
+    
+    output$download_table_sentiment_sentence <- downloadHandler(
+      filename <- function(){
+        paste("sentiment_sentence_table_", Sys.Date(), ".csv", sep = "")
+      },
+      content = function(con){
+        write.csv(
+          collected_sentiments_grouped,
+          con
+        )
+      }
+    )
   })
+  #End Sentiment Selector #####################################################
   
-  dictionary_description <- reactive({
-    vector_query("meta_data", "description", "tables_dictio", input$dictionaries)
-  })
-  
-  observeEvent(dictionary_description(), {
-     descriptio <- dictionary_description()
-     output$dictionary_description <- renderText({descriptio})
-  })
-  
-  selected_sentiments <- reactive({
-    df_query(input$dictionaries)
-  })
-  
-  # General Table #########################################################
-  # Create the sentiments' table
-  collected_sentiments <- reactive({
-    collect_sentiments(debates_2024, selected_sentiments(), negative_words)
-  })
-  
-  
-  # Displaying the sentiments' table
-  output$sentimental_table <- DT::renderDataTable(collected_sentiments(), selection = list(mode = "single", target = "cell"))
-  
-  # Graphic of the table
-  # Grouped table
-  collected_sentiments_grouped <- reactive({
-    grouped_table_sentiments(collected_sentiments(), person)
-  })
-  
-  output$sentimental_table_grouped <- DT::renderDataTable(collected_sentiments_grouped())
-  
-  output$sentiment_graph_1 <- renderPlot(grouped_graph_sentiments(collected_sentiments_grouped()))
-  
-  output$download_table_total_sentiment_sentence <- downloadHandler(
-    filename <- function(){
-      paste("total_sentiment_sentence_table_", Sys.Date(), ".csv", sep = "")
-    },
-    content = function(con){
-      write.csv(
-        collected_sentiments(),
-        con
-      )
-    }
-  )
-  
-  output$download_graph_sentiment_sentence <- downloadHandler(
-    filename <- function(){
-      paste("sentiment_sentence_graph_", Sys.Date(), ".png", sep = "")
-    },
-    content = function(con){
-      ggsave(
-        con,
-        plot = grouped_graph_sentiments(collected_sentiments_grouped()),
-        device = "png",
-        units = "cm",
-        width = 32,
-        height = 18,
-        dpi = 300,
-        scale = 1
-      )
-    }
-  )
-  
-  output$download_table_sentiment_sentence <- downloadHandler(
-    filename <- function(){
-      paste("sentiment_sentence_table_", Sys.Date(), ".csv", sep = "")
-    },
-    content = function(con){
-      write.csv(
-        collected_sentiments_grouped(),
-        con
-      )
-    }
-  )
   
   # Selecting Edit Dictionary Section ###########################################
   # Selecting words to be edited from a dictionary
@@ -768,7 +738,8 @@ server <- function(input, output) {
                       label = "Edit the Assessment Column",
                       choices = sort(bing_table_output)
           ),
-          actionButton("sentiment_table_editor", label = "Change", class = "button_editor")
+          actionButton("sentiment_table_editor", label = "Change", class = "button_editor"),
+          print("NEW UI")
         )
       }else if(input$dictionaries == "afinn"){
         print("This dictionary cannot be edited. Afinn")
