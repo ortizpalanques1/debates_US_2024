@@ -267,6 +267,7 @@ ui <- fluidPage(
                 "Dictionaries", 
                 choices = vector_query("meta_data", "tables_dictio", "include_sentiments", "TRUE")
               ),
+              actionButton("activate_dictionary", label = "Create Table",  class = "button_editor"),
               card(
                 max_height = 250,
                 card_header(textOutput("title_dictionary")),
@@ -619,24 +620,33 @@ server <- function(input, output) {
   
   # Sentiments Selector ##########################################
   
+  
   {
-    
-    counter <- reactiveValues(countervalue = 0)
-    
-    click_number <- eventReactive(input$dictionaries,{
-      counter$countervalue <- counter$countervalue + 1
-      data.frame(
-        "A" = "YOYO",
-        "B" = counter$countervalue
-      )
+    observeEvent(input$activate_dictionary,{
+      selected_sentiments <- df_query(input$dictionaries)
+      collected_sentiments <- collect_sentiments(debates_2024, selected_sentiments, negative_words)
+      output$sentimental_table <- DT::renderDataTable(collected_sentiments, selection = list(mode = "single", target = "cell"))
     })
+    # collected_sentiments <- eventReactive(input$activate_dictionary,{
+    #   collect_sentiments(debates_2024, df_query(input$dictionaries), negative_words)
+    # })
     
-    output$sentimental_table <- DT::renderDataTable(click_number())
+    # counter <- reactiveValues(countervalue = 0)
+    # 
+    # click_number <- eventReactive(input$test_button,{
+    #   counter$countervalue <- counter$countervalue + 1
+    #   data.frame(
+    #     "A" = "YOYO",
+    #     "B" = counter$countervalue
+    #   )
+    # })
+    # 
+    # 
+    # 
+    # output$sentimental_table <- DT::renderDataTable(click_number())
     
     
-    collected_sentiments <- eventReactive(input$dictionaries,{
-      collect_sentiments(debates_2024, df_query(input$dictionaries), negative_words)
-    })
+    
   
     output$title_dictionary <- renderText({cap_letter(input$dictionaries)})
     dictionary_description <- reactive({
@@ -719,7 +729,7 @@ server <- function(input, output) {
 
         # Table is filled with the function
         observeEvent(input$start_table_editor,{
-          editable_sentimental_table$df_data <- collected_sentiments()
+          editable_sentimental_table$df_data <- collected_sentiments
         })
 
         # Change values in table
