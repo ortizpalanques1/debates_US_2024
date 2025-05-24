@@ -623,42 +623,26 @@ server <- function(input, output) {
   
   {
     observeEvent(input$activate_dictionary,{
+      # Function & Query: data frame with the sentiments of the selected dictionary
       selected_sentiments <- df_query(input$dictionaries)
+      # Function: data frame with the sentiment measures
       collected_sentiments <- collect_sentiments(debates_2024, selected_sentiments, negative_words)
+      # Shiny output of collected_sentiments
       output$sentimental_table <- DT::renderDataTable(collected_sentiments, selection = list(mode = "single", target = "cell"))
+      # Variable: title of the dictionary in the description area
+      output$title_dictionary <- renderText({cap_letter(input$dictionaries)})
+      # Function & Query: description of the dictionary in the description area
+      dictionary_description <- vector_query("meta_data", "description", "tables_dictio", input$dictionaries)
+      # Shiny output of the description of the dictionary in the description area
+      output$dictionary_description <- renderText({dictionary_description})
+      # Function: collected sentiments grouped by theme (for instance: positive and negative)
+      collected_sentiments_grouped <- grouped_table_sentiments(collected_sentiments, person)
+      # Shiny output: table with the sentiments already grouped
+      output$sentimental_table_grouped <- DT::renderDataTable(collected_sentiments_grouped)
+      # Shiny output: graphic of the sentiments already grouped
+      output$sentiment_graph_1 <- renderPlot(grouped_graph_sentiments(collected_sentiments_grouped))
     })
-    # collected_sentiments <- eventReactive(input$activate_dictionary,{
-    #   collect_sentiments(debates_2024, df_query(input$dictionaries), negative_words)
-    # })
-    
-    # counter <- reactiveValues(countervalue = 0)
-    # 
-    # click_number <- eventReactive(input$test_button,{
-    #   counter$countervalue <- counter$countervalue + 1
-    #   data.frame(
-    #     "A" = "YOYO",
-    #     "B" = counter$countervalue
-    #   )
-    # })
-    # 
-    # 
-    # 
-    # output$sentimental_table <- DT::renderDataTable(click_number())
-    
-    
-    
   
-    output$title_dictionary <- renderText({cap_letter(input$dictionaries)})
-    dictionary_description <- reactive({
-      vector_query("meta_data", "description", "tables_dictio", input$dictionaries)
-    })
-    output$dictionary_description <- renderText({dictionary_description()})
-    #output$sentimental_table <- DT::renderDataTable(collected_sentiments(), selection = list(mode = "single", target = "cell"))
-    collected_sentiments_grouped <- reactive({
-      grouped_table_sentiments(collected_sentiments(), person)
-    })
-    output$sentimental_table_grouped <- DT::renderDataTable(collected_sentiments_grouped())
-    output$sentiment_graph_1 <- renderPlot(grouped_graph_sentiments(collected_sentiments_grouped()))
     output$download_table_total_sentiment_sentence <- downloadHandler(
       filename <- function(){
       paste("total_sentiment_sentence_table_", Sys.Date(), ".csv", sep = "")

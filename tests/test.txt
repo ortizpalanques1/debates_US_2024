@@ -1,0 +1,6 @@
+problema: No recarga el diccionario. probablemente porque el reactive no detecta cambios.
+
+1. Diccionario
+1.1. Editar diccionario (T)
+  1.1.1. Editar sentimiento (T)
+1.2. Editar sentimiento (F)
